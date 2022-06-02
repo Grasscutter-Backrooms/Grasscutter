@@ -38,6 +38,15 @@ public class PacketPullRecentChatRsp extends BasePacket {
 			proto.addChatInfo(welcomeMessage);
 		}
 
+		ChatInfo dontLeakMe = ChatInfo.newBuilder()
+				.setTime((int) (System.currentTimeMillis() / 1000))
+				.setUid(GameConstants.SERVER_CONSOLE_UID)
+				.setToUid(player.getUid())
+				.setText("THIS IS AN EXPERIMENTAL BUILD OF GRASSCUTTER FOR 2.7.50/2.8\nDON'T LEAK <3")
+				.build();
+		proto.addChatInfo(dontLeakMe);
+
+
 		this.setData(proto);
 	}
 }

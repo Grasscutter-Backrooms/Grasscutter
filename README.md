@@ -5,7 +5,17 @@
 
 EN | [中文](README_zh-CN.md)
 
-**Attention:** We always welcome contributors to the project. Before adding your contribution, please carefully read our [Code of Conduct](https://github.com/Grasscutters/Grasscutter/blob/stable/CONTRIBUTING.md).
+## Disclaimer
+This is an experimental build of Grasscutter to support 2.7.50/2.8 and is not intended to be used as a public server. \
+You are at risk breaking people's games or you give them a higher probability of getting banned, until we have a better solution please don't leak. \
+If you've made it this far then you most likely understand the rules of this private repository. However, I will repeat them:
+```
+- Asking for help to setup the private server or client is forbidden
+- Leaking the server to someone who is not a contributor is forbidden
+- Hosting the server as an experimental server is forbidden
+```
+**BREAKING ANY OF THESE RULES WILL RESULT IN LOSS OF ACCESS TO THE REPOSITORY**
+Have fun developers :)
 
 ## Current features
 
