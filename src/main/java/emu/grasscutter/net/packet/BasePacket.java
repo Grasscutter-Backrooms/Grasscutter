@@ -108,9 +108,14 @@ public class BasePacket {
 		this.writeUint16(baos, const2);
 		
 		byte[] packet = baos.toByteArray();
-		
+
 		if (this.shouldEncrypt) {
-			Crypto.xor(packet, this.useDispatchKey() ? Crypto.DISPATCH_KEY : Crypto.ENCRYPT_KEY);
+			if(this.useDispatchKey()) {
+				Crypto.xor(packet, Crypto.DISPATCH_KEY, true);
+			}
+			else {
+				Crypto.xor(packet, Crypto.ENCRYPT_KEY, false);
+			}
 		}
 
 		return packet;

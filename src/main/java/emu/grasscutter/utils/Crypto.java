@@ -16,7 +16,7 @@ public final class Crypto {
 	public static byte[] DISPATCH_SEED;
 
 	public static byte[] ENCRYPT_KEY;
-	public static long ENCRYPT_SEED = Long.parseUnsignedLong("11468049314633205968");
+	public static long ENCRYPT_SEED = 0; // Long.parseUnsignedLong("11468049314633205968");
 	public static byte[] ENCRYPT_SEED_BUFFER = new byte[0];
 	
 	public static void loadKeys() {
@@ -27,13 +27,15 @@ public final class Crypto {
 		ENCRYPT_SEED_BUFFER = FileUtils.readResource("/keys/secretKeyBuffer.bin");
 	}
 	
-	public static void xor(byte[] packet, byte[] key) {
-		try {
-			for (int i = 0; i < packet.length; i++) {
-				packet[i] ^= key[i % key.length];
+	public static void xor(byte[] packet, byte[] key, boolean skip_enc) {
+		if(!skip_enc) {
+			try {
+				for (int i = 0; i < packet.length; i++) {
+					packet[i] ^= key[i % key.length];
+				}
+			} catch (Exception e) {
+				Grasscutter.getLogger().error("Crypto error.", e);
 			}
-		} catch (Exception e) {
-			Grasscutter.getLogger().error("Crypto error.", e);
 		}
 	}
 	

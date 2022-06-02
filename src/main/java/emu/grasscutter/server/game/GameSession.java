@@ -201,7 +201,13 @@ public class GameSession extends KcpChannel {
 	public void onMessage(ChannelHandlerContext ctx, ByteBuf data) {
 		// Decrypt and turn back into a packet
 		byte[] byteData = Utils.byteBufToArray(data);
-		Crypto.xor(byteData, useSecretKey() ? Crypto.ENCRYPT_KEY : Crypto.DISPATCH_KEY);
+		if(useSecretKey()){
+			Crypto.xor(byteData, Crypto.ENCRYPT_KEY, false);
+		}
+		else{
+			Crypto.xor(byteData, Crypto.ENCRYPT_KEY, true);
+		}
+
 		ByteBuf packet = Unpooled.wrappedBuffer(byteData);
 		
 		// Log
