@@ -2,11 +2,12 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
+
 message AdjustTrackingInfo {
-	string idfa = 1;
-	string gps_adid = 2;
-	string fire_adid = 3;
-	string adid = 4;
-	string event_token = 5;
-	string app_token = 6;
+	string idfa = 10;
+	string gps_adid = 6;
+	string fire_adid = 7;
+	string adid = 9;
+	string event_token = 12;
+	string app_token = 13;
 }

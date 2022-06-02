@@ -2,13 +2,18 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
-import "ItemHint.proto";
 import "Vector.proto";
+import "ItemHint.proto";
 
-// CmdId: 632
-// EnetChannelId: 0
-// EnetIsReliable: true
 message ItemAddHintNotify {
+	enum CmdId {
+		option allow_alias = true;
+		NONE = 0;
+		ENET_CHANNEL_ID = 0;
+		ENET_IS_RELIABLE = 1;
+		CMD_ID = 632;
+	}
+
 	repeated ItemHint item_list = 10;
 	Vector position = 12;
 	bool is_position_valid = 13;

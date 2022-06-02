@@ -2,15 +2,20 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
-import "BlockInfo.proto";
-import "FeatureBlockInfo.proto";
 import "ResVersionConfig.proto";
+import "BlockInfo.proto";
 import "ShortAbilityHashPair.proto";
+import "FeatureBlockInfo.proto";
 
-// CmdId: 137
-// EnetChannelId: 0
-// EnetIsReliable: true
 message PlayerLoginRsp {
+	enum CmdId {
+		option allow_alias = true;
+		NONE = 0;
+		ENET_CHANNEL_ID = 0;
+		ENET_IS_RELIABLE = 1;
+		CMD_ID = 137;
+	}
+
 	int32 retcode = 1;
 	bytes player_data = 6;
 	bool is_new_player = 11;

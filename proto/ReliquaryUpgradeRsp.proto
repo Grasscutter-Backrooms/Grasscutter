@@ -2,10 +2,16 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
-// CmdId: 619
-// EnetChannelId: 0
-// EnetIsReliable: true
+
 message ReliquaryUpgradeRsp {
+	enum CmdId {
+		option allow_alias = true;
+		NONE = 0;
+		ENET_CHANNEL_ID = 0;
+		ENET_IS_RELIABLE = 1;
+		CMD_ID = 619;
+	}
+
 	int32 retcode = 1;
 	uint64 target_reliquary_guid = 10;
 	uint32 old_level = 5;

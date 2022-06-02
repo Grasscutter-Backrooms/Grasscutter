@@ -2,6 +2,9 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
+
+
+
 import "AbilityGadgetInfo.proto";
 import "BlossomChestInfo.proto";
 import "BossChestInfo.proto";
@@ -24,6 +27,14 @@ import "StatueGadgetInfo.proto";
 import "VehicleInfo.proto";
 import "WeatherInfo.proto";
 import "WorktopInfo.proto";
+
+
+
+
+
+
+
+
 
 message SceneGadgetInfo {
 	uint32 gadget_id = 1;

@@ -2,11 +2,17 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
-// CmdId: 109
-// EnetChannelId: 0
-// EnetIsReliable: true
-// IsAllowClient: true
+
 message GetPlayerTokenReq {
+	enum CmdId {
+		option allow_alias = true;
+		NONE = 0;
+		ENET_CHANNEL_ID = 0;
+		ENET_IS_RELIABLE = 1;
+		IS_ALLOW_CLIENT = 1;
+		CMD_ID = 109;
+	}
+
 	uint32 account_type = 3;
 	string account_uid = 12;
 	string account_token = 14;
@@ -23,5 +29,4 @@ message GetPlayerTokenReq {
 	string psn_id = 5;
 	string client_ip_str = 6;
 	string birthday = 966;
-	uint32 NNCIBOLDIAI = 1883;
 }

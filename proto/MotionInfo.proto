@@ -2,8 +2,8 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
-import "MotionState.proto";
 import "Vector.proto";
+import "MotionState.proto";
 
 message MotionInfo {
 	Vector pos = 1;

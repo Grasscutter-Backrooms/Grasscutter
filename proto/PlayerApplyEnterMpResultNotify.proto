@@ -2,15 +2,8 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
-// CmdId: 1804
-// EnetChannelId: 0
-// EnetIsReliable: true
-message PlayerApplyEnterMpResultNotify {
-	uint32 target_uid = 7;
-	bool is_agreed = 4;
-	Reason reason = 14;
-	string target_nickname = 5;
 
+message PlayerApplyEnterMpResultNotify {
 	enum Reason {
 		REASON_PLAYER_JUDGE = 0;
 		REASON_SCENE_CANNOT_ENTER = 1;
@@ -27,4 +20,9 @@ message PlayerApplyEnterMpResultNotify {
 		REASON_PLAYER_NOT_IN_PLAYER_WORLD = 12;
 		REASON_MAX_PLAYER = 13;
 	}
+
+	uint32 target_uid = 7;
+	bool is_agreed = 4;
+	Reason reason = 14;
+	string target_nickname = 5;
 }

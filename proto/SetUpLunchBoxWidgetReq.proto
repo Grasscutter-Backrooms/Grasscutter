@@ -4,10 +4,15 @@ option java_package = "emu.grasscutter.net.proto";
 
 import "LunchBoxData.proto";
 
-// CmdId: 4297
-// EnetChannelId: 0
-// EnetIsReliable: true
-// IsAllowClient: true
 message SetUpLunchBoxWidgetReq {
+	enum CmdId {
+		option allow_alias = true;
+		NONE = 0;
+		ENET_CHANNEL_ID = 0;
+		ENET_IS_RELIABLE = 1;
+		IS_ALLOW_CLIENT = 1;
+		CMD_ID = 4297;
+	}
+
 	LunchBoxData lunch_box_data = 12;
 }

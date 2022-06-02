@@ -2,14 +2,19 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
-import "AdjustTrackingInfo.proto";
 import "TrackingIOInfo.proto";
+import "AdjustTrackingInfo.proto";
 
-// CmdId: 141
-// EnetChannelId: 0
-// EnetIsReliable: true
-// IsAllowClient: true
 message PlayerLoginReq {
+	enum CmdId {
+		option allow_alias = true;
+		NONE = 0;
+		ENET_CHANNEL_ID = 0;
+		ENET_IS_RELIABLE = 1;
+		IS_ALLOW_CLIENT = 1;
+		CMD_ID = 141;
+	}
+
 	string token = 5;
 	string client_version = 7;
 	string system_version = 12;
@@ -49,7 +54,4 @@ message PlayerLoginReq {
 	uint32 target_home_param = 1129;
 	AdjustTrackingInfo adjust_tracking_info = 280;
 	string birthday = 174;
-	string MADLMMNJICA = 135;
-	string CCLJBEJHFOP = 745;
-	uint32 LKCFGDBHHIL = 1881;
 }

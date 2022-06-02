@@ -8,11 +8,11 @@ import "ForwardType.proto";
 
 message AbilityInvokeEntry {
 	AbilityInvokeEntryHead head = 1;
-	AbilityInvokeArgument argument_type = 2;
-	bytes ability_data = 3;
-	uint32 entity_id = 4;
-	ForwardType forward_type = 5;
-	uint32 forward_peer = 6;
-	uint32 event_id = 7;
-	double total_tick_time = 8;
+	AbilityInvokeArgument argument_type = 7;
+	bytes ability_data = 12;
+	uint32 entity_id = 14;
+	ForwardType forward_type = 8;
+	uint32 forward_peer = 4;
+	uint32 event_id = 3;
+	double total_tick_time = 9;
 }

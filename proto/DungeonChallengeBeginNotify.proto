@@ -2,10 +2,16 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
-// CmdId: 990
-// EnetChannelId: 0
-// EnetIsReliable: true
+
 message DungeonChallengeBeginNotify {
+	enum CmdId {
+		option allow_alias = true;
+		NONE = 0;
+		ENET_CHANNEL_ID = 0;
+		ENET_IS_RELIABLE = 1;
+		CMD_ID = 990;
+	}
+
 	uint32 challenge_id = 8;
 	uint32 challenge_index = 11;
 	repeated uint32 param_list = 13;

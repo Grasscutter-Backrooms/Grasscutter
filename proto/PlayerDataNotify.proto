@@ -4,10 +4,15 @@ option java_package = "emu.grasscutter.net.proto";
 
 import "PropValue.proto";
 
-// CmdId: 135
-// EnetChannelId: 0
-// EnetIsReliable: true
 message PlayerDataNotify {
+	enum CmdId {
+		option allow_alias = true;
+		NONE = 0;
+		ENET_CHANNEL_ID = 0;
+		ENET_IS_RELIABLE = 1;
+		CMD_ID = 135;
+	}
+
 	string nick_name = 15;
 	uint64 server_time = 2;
 	bool is_first_login_today = 11;

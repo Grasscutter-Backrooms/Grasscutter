@@ -2,6 +2,7 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
+
 message RoguelikeGadgetInfo {
 	uint32 cell_config_id = 1;
 	uint32 cell_type = 2;

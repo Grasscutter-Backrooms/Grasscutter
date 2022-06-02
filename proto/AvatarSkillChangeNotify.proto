@@ -2,10 +2,16 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
-// CmdId: 1030
-// EnetChannelId: 0
-// EnetIsReliable: true
+
 message AvatarSkillChangeNotify {
+	enum CmdId {
+		option allow_alias = true;
+		NONE = 0;
+		ENET_CHANNEL_ID = 0;
+		ENET_IS_RELIABLE = 1;
+		CMD_ID = 1030;
+	}
+
 	uint64 avatar_guid = 4;
 	uint32 entity_id = 15;
 	uint32 skill_depot_id = 5;

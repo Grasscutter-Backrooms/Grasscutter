@@ -5,12 +5,17 @@ option java_package = "emu.grasscutter.net.proto";
 import "WidgetSlotOp.proto";
 import "WidgetSlotTag.proto";
 
-// CmdId: 4260
-// EnetChannelId: 0
-// EnetIsReliable: true
 message SetWidgetSlotRsp {
-	int32 retcode = 7;
-	WidgetSlotOp op = 14;
-	repeated WidgetSlotTag tag_list = 4;
-	uint32 material_id = 9;
+	enum CmdId {
+		option allow_alias = true;
+		NONE = 0;
+		ENET_CHANNEL_ID = 0;
+		ENET_IS_RELIABLE = 1;
+		CMD_ID = 4269;
+	}
+
+	int32 retcode = 4;
+	WidgetSlotOp op = 11;
+	repeated WidgetSlotTag tag_list = 9;
+	uint32 material_id = 10;
 }

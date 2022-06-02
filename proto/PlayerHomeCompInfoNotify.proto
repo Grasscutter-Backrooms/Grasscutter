@@ -4,9 +4,14 @@ option java_package = "emu.grasscutter.net.proto";
 
 import "PlayerHomeCompInfo.proto";
 
-// CmdId: 4563
-// EnetChannelId: 0
-// EnetIsReliable: true
 message PlayerHomeCompInfoNotify {
+	enum CmdId {
+		option allow_alias = true;
+		NONE = 0;
+		ENET_CHANNEL_ID = 0;
+		ENET_IS_RELIABLE = 1;
+		CMD_ID = 4563;
+	}
+
 	PlayerHomeCompInfo comp_info = 2;
 }

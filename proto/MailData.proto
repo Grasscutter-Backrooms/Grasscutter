@@ -3,8 +3,8 @@ syntax = "proto3";
 option java_package = "emu.grasscutter.net.proto";
 
 import "CBJEDMGOBPL.proto";
-import "MailItem.proto";
 import "MailTextContent.proto";
+import "MailItem.proto";
 
 message MailData {
 	uint32 mail_id = 1;

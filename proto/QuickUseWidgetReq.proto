@@ -2,15 +2,11 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
-import "WidgetCameraInfo.proto";
 import "WidgetCreateLocationInfo.proto";
+import "WidgetCameraInfo.proto";
 import "WidgetCreatorInfo.proto";
 import "WidgetThunderBirdFeatherInfo.proto";
 
-// CmdId: 4251
-// EnetChannelId: 0
-// EnetIsReliable: true
-// IsAllowClient: true
 message QuickUseWidgetReq {
 	oneof param {
 		WidgetCreateLocationInfo location_info = 1800;
