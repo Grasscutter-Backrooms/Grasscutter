@@ -22,16 +22,18 @@ import io.javalin.Javalin;
 
 import javax.crypto.Cipher;
 import java.io.File;
+import java.io.StringReader;
 import java.nio.charset.Charset;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
+import java.security.*;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 
 import static emu.grasscutter.Configuration.*;
 import static emu.grasscutter.net.proto.QueryRegionListHttpRspOuterClass.*;
@@ -55,6 +57,8 @@ public final class RegionHandler implements Router {
      * Configures region data according to configuration.
      */
     private void initialize() {
+        Security.addProvider(new BouncyCastleProvider());
+
         String dispatchDomain = "http" + (HTTP_ENCRYPTION.useInRouting ? "s" : "") + "://"
                 + lr(HTTP_INFO.accessAddress, HTTP_INFO.bindAddress) + ":"
                 + lr(HTTP_INFO.accessPort, HTTP_INFO.bindPort);
@@ -149,20 +153,14 @@ public final class RegionHandler implements Router {
             try {
                 var key = new String(FileUtils.readResource("/cert/" + (versionName.contains("OSCB") ? "OSCB.pem" : "OSCN.pem") ), Charset.defaultCharset());
 
-                String publicKeyPEM = key
-                        .replace("-----BEGIN PUBLIC KEY-----", "")
-                        .replaceAll(System.lineSeparator(), "")
-                        .replace("-----END PUBLIC KEY-----", "");
+                PEMParser pemParser = new PEMParser(new StringReader(key));
+                JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+                Object object = pemParser.readObject();
+                KeyPair kp = converter.getKeyPair((PEMKeyPair) object);
+                PublicKey pub_key = kp.getPublic();
 
-                byte[] encoded = Utils.base64Decode(publicKeyPEM);
-
-                KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
-
-                PrivateKey pk = keyFactory.generatePrivate(keySpec);
-
-                Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-                cipher.init(Cipher.ENCRYPT_MODE, pk);
+                Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding", "BC");
+                cipher.init(Cipher.ENCRYPT_MODE, pub_key);
 
                 QueryCurrentRegionEvent event = new QueryCurrentRegionEvent(regionData); event.call();
                 var regionInfo = event.getRegionInfo();
@@ -174,10 +172,9 @@ public final class RegionHandler implements Router {
                 rsp.sign = "ZnVja195b3VfbWh5";
 
                 response.send(rsp);
-                //var rsp = "{\"content\":\"rr9YPwJ0RHy8ZBaV9yMb1ZV0b8XGN3nEYdns/mjc4cke1pxcYt9nfqgDfNKVqod0zBHc/SBWS7smIdnvr/Y2zmyCwU4NGtK7oMPzgEfURalLbSj+k4fhI1GkH3pki4kTtiISPj2RuJAN5KLZ1ANZhIxHVOb2nbHED9gzkIhwkk5GaTIE4H6OIE+3eorFiMKwX7e1jsnCSGWZ3V/3NszzSP+j0LHwyeyLm9rghRgRiVbIlhYheNNwPLeQ/EA5iRHuU4uxLLdb/jl47iNgB24uS/BfIPWDKeCubcYJJ8xfPE2fFuqZ5495vPmJOfX3tnxrBFuNQ3oUSGp1wdh9CalIlw==\",\"sign\":\"gK2Q0wgTjqtnuffdFLyC6TYqwMhrdWRy3DaeQPQquFEVPOqSU9E7WoYhKa/jbHhQJVqpBzo+Kmi8Mn+0MZu8qhlhWw0lTCtr8/DYX13qqwYyfSlXSdkJ+lfCqtykMeJmmVM4QzazL4mjFIIQ3dlBg7OaMooBcX29BO3eucPIiL1BRv9Q4BhPMlYfFLReKqDSJZzvLOl8WAEsEPuEPF26zKJ2EFOvFmeTgLqqk8vvc7k3EnIKbGZlMeNfx2pjGeTpmsRafGTLwpJWlGBHsPSfrpTENLLtxh6uFIDtjVqnIy8QQ3IXcmvFpgdwAYlJdvD31qSWet2Pzbe3wQATQelyNA==\"}";
             }
-            catch(Exception ignored) {
-
+            catch(Exception e) {
+                e.printStackTrace();
             }
         }
         else {
