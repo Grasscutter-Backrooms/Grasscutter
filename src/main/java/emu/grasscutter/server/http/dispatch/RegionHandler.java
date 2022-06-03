@@ -30,11 +30,6 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.openssl.PEMKeyPair;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-
 import static emu.grasscutter.Configuration.*;
 import static emu.grasscutter.net.proto.QueryRegionListHttpRspOuterClass.*;
 
@@ -57,8 +52,6 @@ public final class RegionHandler implements Router {
      * Configures region data according to configuration.
      */
     private void initialize() {
-        Security.addProvider(new BouncyCastleProvider());
-
         String dispatchDomain = "http" + (HTTP_ENCRYPTION.useInRouting ? "s" : "") + "://"
                 + lr(HTTP_INFO.accessAddress, HTTP_INFO.bindAddress) + ":"
                 + lr(HTTP_INFO.accessPort, HTTP_INFO.bindPort);
@@ -151,15 +144,13 @@ public final class RegionHandler implements Router {
 
         if( versionName.contains("2.7.5") || versionName.contains("2.8.")) {
             try {
-                var key = new String(FileUtils.readResource("/cert/" + (versionName.contains("OSCB") ? "OSCB.pem" : "OSCN.pem") ), Charset.defaultCharset());
+                var key = FileUtils.readResource("/keys/" + (versionName.contains("OSCB") ? "OSCB_Pub.der" : "OSCN_Pub.der") );
 
-                PEMParser pemParser = new PEMParser(new StringReader(key));
-                JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
-                Object object = pemParser.readObject();
-                KeyPair kp = converter.getKeyPair((PEMKeyPair) object);
-                PublicKey pub_key = kp.getPublic();
+                KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                X509EncodedKeySpec  keySpec = new X509EncodedKeySpec(key);
+                PublicKey pub_key = keyFactory.generatePublic(keySpec);
 
-                Cipher cipher = Cipher.getInstance("RSA/None/PKCS1Padding", "BC");
+                Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
                 cipher.init(Cipher.ENCRYPT_MODE, pub_key);
 
                 QueryCurrentRegionEvent event = new QueryCurrentRegionEvent(regionData); event.call();

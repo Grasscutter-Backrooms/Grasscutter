@@ -43,7 +43,7 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 group = 'xyz.grasscutters'
-version = '1.2.0-2.8_dev'
+version = '1.1.2-dev'
 
 
 sourceCompatibility = 17
@@ -85,9 +85,6 @@ dependencies {
     implementation group: 'org.quartz-scheduler', name: 'quartz-jobs', version: '2.3.2'
 
     implementation group: 'org.luaj', name: 'luaj-jse', version: '3.0.1'
-    implementation group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.70'
-    implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
-
 
     protobuf files('proto/')
 
