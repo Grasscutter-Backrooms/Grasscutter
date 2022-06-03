@@ -4,6 +4,6 @@ option java_package = "emu.grasscutter.net.proto";
 
 
 message UnionCmd {
-	uint32 message_id = 1;
-	bytes body = 2;
+	uint32 message_id = 9;
+	bytes body = 13;
 }

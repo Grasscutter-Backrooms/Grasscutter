@@ -6,7 +6,7 @@ import "CombatTypeArgument.proto";
 import "ForwardType.proto";
 
 message CombatInvokeEntry {
-	CombatTypeArgument argument_type = 1;
-	ForwardType forward_type = 2;
-	bytes combat_data = 3;
+	CombatTypeArgument argument_type = 14;
+	ForwardType forward_type = 12;
+	bytes combat_data = 11;
 }
