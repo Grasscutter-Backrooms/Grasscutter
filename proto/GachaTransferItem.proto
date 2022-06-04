@@ -5,6 +5,6 @@ option java_package = "emu.grasscutter.net.proto";
 import "ItemParam.proto";
 
 message GachaTransferItem {
-	ItemParam item = 1;
-	bool is_transfer_item_new = 2;
+    ItemParam item = 8;
+    bool is_transfer_item_new = 13;
 }
