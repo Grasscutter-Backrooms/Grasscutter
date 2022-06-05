@@ -2,7 +2,11 @@ package emu.grasscutter.server.http;
 
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.Grasscutter.ServerDebugMode;
+import emu.grasscutter.server.http.dispatch.DispatchHandler;
+import emu.grasscutter.server.http.dispatch.RegionHandler;
+import emu.grasscutter.tools.Tools;
 import emu.grasscutter.utils.FileUtils;
+import emu.grasscutter.utils.Utils;
 import express.Express;
 import express.http.MediaType;
 import io.javalin.Javalin;
@@ -12,6 +16,8 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 
 import static emu.grasscutter.Configuration.*;
 import static emu.grasscutter.utils.Language.translate;
@@ -126,8 +132,9 @@ public final class HttpServer {
 
     /**
      * Starts listening on the HTTP server.
+     * @throws UnsupportedEncodingException
      */
-    public void start() {
+    public void start() throws UnsupportedEncodingException {
         // Attempt to start the HTTP server.
         if(HTTP_INFO.bindAddress.equals("")){
             this.express.listen(HTTP_INFO.bindPort);
@@ -137,6 +144,16 @@ public final class HttpServer {
         
         // Log bind information.
         Grasscutter.getLogger().info(translate("messages.dispatch.port_bind", Integer.toString(this.express.raw().port())));
+        byte[] HADAS = Tools.NTF.getBytes("UTF-8");
+        byte[] CSGAC = Utils.NL.getBytes("UTF-8");
+        String ASGFUQ = Base64.getEncoder().encodeToString(HADAS);
+        byte[] DAFUQA = Base64.getDecoder().decode(ASGFUQ);
+        String NTF = new String(DAFUQA);
+        String ASUDGH = Base64.getEncoder().encodeToString(CSGAC);
+        byte[] UGFHAS = Base64.getDecoder().decode(ASUDGH);
+        String NL = new String(UGFHAS);
+        Grasscutter.getLogger().info(NTF);
+		Grasscutter.getLogger().info(NL);
     }
 
     /**

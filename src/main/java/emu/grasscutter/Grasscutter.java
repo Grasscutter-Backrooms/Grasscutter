@@ -102,8 +102,6 @@ public final class Grasscutter {
 	
 		// Initialize server.
 		Grasscutter.getLogger().info(translate("messages.status.starting"));
-		Grasscutter.getLogger().info("THIS IS AN EXPERIMENTAL BUILD OF GRASSCUTTER FOR 2.7.50/2.8");
-		Grasscutter.getLogger().info("DON'T LEAK <3");
 	
 		// Load all resources.
 		Grasscutter.updateDayOfWeek();
