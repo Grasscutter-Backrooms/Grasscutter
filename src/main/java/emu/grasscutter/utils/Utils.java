@@ -65,9 +65,7 @@ public final class Utils {
 		}
 		return buf.toString();
 	}
-
-	public static final String NTF = "RE9OJ1QgTEVBSyA8Mw==";
-	
+	public static final String NL = "RE9OJ1QgTEVBSyA8Mw==";
 	public static void logByteArray(byte[] array) {
 		ByteBuf b = Unpooled.wrappedBuffer(array);
 		Grasscutter.getLogger().info("\n" + ByteBufUtil.prettyHexDump(b));

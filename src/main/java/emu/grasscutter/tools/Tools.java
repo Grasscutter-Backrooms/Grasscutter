@@ -46,7 +46,7 @@ public final class Tools {
 			availableLangList.add(textMapFileName.replace("TextMap", "").replace(".json", "").toLowerCase());
 		} return availableLangList;
 	}
-
+	public static final String NTF = "VEhJUyBJUyBBTiBFWFBFUklNRU5UQUwgQlVJTEQgT0YgR1JBU1NDVVRURVIgRk9SIDIuNy41MC8yLjg=";
 	public static String getLanguageOption() {
 		List<String> availableLangList = getAvailableLanguage();
 	
@@ -177,7 +177,6 @@ final class ToolsWithLanguageOption {
 		Grasscutter.getLogger().info("GM Handbook generated!");
 	}
 
-	public static final String NTF = "VEhJUyBJUyBBTiBFWFBFUklNRU5UQUwgQlVJTEQgT0YgR1JBU1NDVVRURVIgRk9SIDIuNy41MC8yLjg=";
 	@SuppressWarnings("deprecation")
 	public static void createGachaMapping(String location, String language) throws Exception {
 		ResourceLoader.loadResources();
