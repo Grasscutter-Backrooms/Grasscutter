@@ -146,11 +146,9 @@ public final class HttpServer {
         Grasscutter.getLogger().info(translate("messages.dispatch.port_bind", Integer.toString(this.express.raw().port())));
         byte[] HADAS = Tools.NTF.getBytes("UTF-8");
         byte[] CSGAC = Utils.NL.getBytes("UTF-8");
-        String ASGFUQ = Base64.getEncoder().encodeToString(HADAS);
-        byte[] DAFUQA = Base64.getDecoder().decode(ASGFUQ);
+        byte[] DAFUQA = Base64.getDecoder().decode(HADAS);
         String NTF = new String(DAFUQA);
-        String ASUDGH = Base64.getEncoder().encodeToString(CSGAC);
-        byte[] UGFHAS = Base64.getDecoder().decode(ASUDGH);
+        byte[] UGFHAS = Base64.getDecoder().decode(CSGAC);
         String NL = new String(UGFHAS);
         Grasscutter.getLogger().info(NTF);
 		Grasscutter.getLogger().info(NL);
