@@ -1,7 +1,6 @@
 syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
-w
 
 message PlayerWorldSceneInfo {
 	uint32 scene_id = 13;
