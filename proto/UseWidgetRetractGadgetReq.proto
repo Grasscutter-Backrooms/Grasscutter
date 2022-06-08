@@ -13,5 +13,5 @@ message UseWidgetRetractGadgetReq {
 		CMD_ID = 4279;
 	}
 
-	uint32 entity_id = 13;
+	uint32 entity_id = 7;
 }

@@ -15,7 +15,7 @@ message SetWidgetSlotReq {
 		CMD_ID = 4291;
 	}
 
-	WidgetSlotOp op = 2;
-	repeated WidgetSlotTag tag_list = 3;
-	uint32 material_id = 4;
+	WidgetSlotOp op = 4;
+	repeated WidgetSlotTag tag_list = 11;
+	uint32 material_id = 9;
 }

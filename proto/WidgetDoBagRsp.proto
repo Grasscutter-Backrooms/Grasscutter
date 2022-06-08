@@ -4,6 +4,6 @@ option java_package = "emu.grasscutter.net.proto";
 
 
 message WidgetDoBagRsp {
-	int32 retcode = 15;
-	uint32 material_id = 2;
+	int32 retcode = 12;
+	uint32 material_id = 9;
 }

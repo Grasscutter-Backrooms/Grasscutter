@@ -14,7 +14,7 @@ message UseWidgetCreateGadgetReq {
 		CMD_ID = 4273;
 	}
 
-	uint32 material_id = 13;
-	Vector pos = 2;
-	Vector rot = 11;
+	uint32 material_id = 1;
+	Vector pos = 10;
+	Vector rot = 4;
 }

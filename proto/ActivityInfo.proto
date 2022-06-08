@@ -7,11 +7,11 @@ import "ActivityWatcherInfo.proto";
 
 message ActivityInfo {
 	oneof Detail {
-		ActivityNullDetailInfo sam_lamp_info = 11;
-		ActivityNullDetailInfo crucible_info = 12;
-		ActivityNullDetailInfo salesman_info = 13;
-		ActivityNullDetailInfo trial_avatar_info = 14;
-		ActivityNullDetailInfo delivery_info = 16;
+		ActivityNullDetailInfo sam_lamp_info = 6;
+		ActivityNullDetailInfo crucible_info = 5;
+		ActivityNullDetailInfo salesman_info = 3;
+		ActivityNullDetailInfo trial_avatar_info = 2;
+		ActivityNullDetailInfo delivery_info = 1673;
 		ActivityNullDetailInfo aster_info = 21;
 		ActivityNullDetailInfo flight_info = 25;
 		ActivityNullDetailInfo dragon_spine_info = 31;
@@ -41,17 +41,17 @@ message ActivityInfo {
 		ActivityNullDetailInfo roguelike_dungoen_info = 76;
 		ActivityNullDetailInfo dig_info = 77;
 	}
-	uint32 activity_id = 1;
-	uint32 schedule_id = 2;
-	uint32 begin_time = 3;
-	uint32 end_time = 4;
+	uint32 activity_id = 12;
+	uint32 schedule_id = 10;
+	uint32 begin_time = 13;
+	uint32 end_time = 11;
 	uint32 activity_type = 8;
-	bool is_play_open_anim = 6;
+	bool is_play_open_anim = 14;
 	bool is_finished = 7;
 	bool is_starting = 9;
-	repeated ActivityWatcherInfo watcher_info_list = 5;
+	repeated ActivityWatcherInfo watcher_info_list = 4;
 	repeated uint32 meet_cond_list = 15;
-	repeated uint32 expire_cond_list = 17;
+	repeated uint32 expire_cond_list = 1;
 	uint32 selected_avatar_reward_id = 1394;
 	map<uint32, uint32> activity_coin_map = 1648;
 	uint32 score_limit = 1187;

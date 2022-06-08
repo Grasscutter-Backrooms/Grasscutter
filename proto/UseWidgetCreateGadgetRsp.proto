@@ -12,6 +12,6 @@ message UseWidgetCreateGadgetRsp {
 		CMD_ID = 4283;
 	}
 
-	int32 retcode = 1;
+	int32 retcode = 13;
 	uint32 material_id = 2;
 }

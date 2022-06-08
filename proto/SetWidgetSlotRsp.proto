@@ -14,8 +14,8 @@ message SetWidgetSlotRsp {
 		CMD_ID = 4269;
 	}
 
-	int32 retcode = 4;
-	WidgetSlotOp op = 11;
-	repeated WidgetSlotTag tag_list = 9;
-	uint32 material_id = 10;
+	int32 retcode = 7;
+	WidgetSlotOp op = 14;
+	repeated WidgetSlotTag tag_list = 4;
+	uint32 material_id = 9;
 }

@@ -13,6 +13,6 @@ message GetWidgetSlotRsp {
 		CMD_ID = 4267;
 	}
 
-	int32 retcode = 1;
-	repeated WidgetSlotData slot_list = 2;
+	int32 retcode = 12;
+	repeated WidgetSlotData slot_list = 8;
 }
