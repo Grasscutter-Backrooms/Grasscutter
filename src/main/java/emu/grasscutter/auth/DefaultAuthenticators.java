@@ -1,10 +1,19 @@
 package emu.grasscutter.auth;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.auth.AuthenticationSystem.AuthenticationRequest;
 import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.Account;
 import emu.grasscutter.server.http.objects.*;
+import emu.grasscutter.utils.FileUtils;
+import emu.grasscutter.utils.Utils;
+
+import javax.crypto.Cipher;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 
 import static emu.grasscutter.Configuration.*;
 import static emu.grasscutter.utils.Language.translate;
@@ -29,6 +38,30 @@ public final class DefaultAuthenticators {
             String address = request.getRequest().ip();
             String responseMessage = translate("messages.dispatch.account.username_error");
             String loggerMessage = "";
+            String decryptedPassword = "";
+
+            // Get Password
+            if(ACCOUNT.EXPERIMENTAL_RealPassword) {
+                try {
+                    byte[] key = FileUtils.readResource("/keys/auth_private-key.der");
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(key);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                    RSAPrivateKey private_key = (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
+
+                    Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+
+                    cipher.init(Cipher.DECRYPT_MODE, private_key);
+
+                    decryptedPassword = new String(cipher.doFinal(Utils.base64Decode(request.getPasswordRequest().password)), StandardCharsets.UTF_8);
+                } catch (Exception ignored) {
+                    ignored.printStackTrace();
+                }
+
+                if(decryptedPassword == null) {
+                    successfulLogin = false;
+                    loggerMessage = "Password Empty";
+                }
+            }
 
             // Get account from database.
             Account account = DatabaseHelper.getAccountByName(requestData.account);
@@ -36,24 +69,63 @@ public final class DefaultAuthenticators {
                 // Check if account exists.
                 if(account == null && ACCOUNT.autoCreate) {
                     // This account has been created AUTOMATICALLY. There will be no permissions added.
-                    account = DatabaseHelper.createAccountWithUid(requestData.account, 0);
+                    if(ACCOUNT.EXPERIMENTAL_RealPassword == true) {
+                        if(decryptedPassword.length() >= 8) {
+                            account = DatabaseHelper.createAccountWithUid(requestData.account, 0);
+                            account.setPassword(BCrypt.withDefaults().hashToString(12, decryptedPassword.toCharArray()));
+                            account.save();
 
-                    // Check if the account was created successfully.
-                    if(account == null) {
-                        responseMessage = translate("messages.dispatch.account.username_create_error");
-                        Grasscutter.getLogger().info(translate("messages.dispatch.account.account_login_create_error", address));
+                            // Check if the account was created successfully.
+                            if(account == null) {
+                                responseMessage = translate("messages.dispatch.account.username_create_error");
+                                Grasscutter.getLogger().info(translate("messages.dispatch.account.account_login_create_error", address));
+                            } else {
+                                // Continue with login.
+                                successfulLogin = true;
+
+                                // Log the creation.
+                                Grasscutter.getLogger().info(translate("messages.dispatch.account.account_login_create_success", address, response.data.account.uid));
+                            }
+                        } else {
+                            successfulLogin = false;
+                            loggerMessage = "Password must be >= 8";
+                            responseMessage = "Password must be >= 8";
+                        }
                     } else {
-                        // Continue with login.
-                        successfulLogin = true;
+                        account = DatabaseHelper.createAccountWithUid(requestData.account, 0);
+                        // Check if the account was created successfully.
+                        if(account == null) {
+                            responseMessage = translate("messages.dispatch.account.username_create_error");
+                            Grasscutter.getLogger().info(translate("messages.dispatch.account.account_login_create_error", address));
+                        } else {
+                            // Continue with login.
+                            successfulLogin = true;
 
-                        // Log the creation.
-                        Grasscutter.getLogger().info(translate("messages.dispatch.account.account_login_create_success", address, response.data.account.uid));
+                            // Log the creation.
+                            Grasscutter.getLogger().info(translate("messages.dispatch.account.account_login_create_success", address, response.data.account.uid));
+                        }
                     }
-                } else if(account != null)
-                    successfulLogin = true;
-                 else
+                } else if(account != null) {
+                    if (ACCOUNT.EXPERIMENTAL_RealPassword) {
+                        if(account.getPassword() != null && !account.getPassword().isEmpty()) {
+                            if (BCrypt.verifyer().verify(decryptedPassword.toCharArray(), account.getPassword()).verified) {
+                                successfulLogin = true;
+                            } else {
+                                successfulLogin = false;
+                                loggerMessage = "Password Invalid";
+                                responseMessage = "Password Invalid";
+                            }
+                        } else {
+                            successfulLogin = false;
+                            loggerMessage = "Stored Password Empty.";
+                            responseMessage = "Stored Password Empty";
+                        }
+                    } else {
+                        successfulLogin = true;
+                    }
+                } else {
                     loggerMessage = translate("messages.dispatch.account.account_login_exist_error", address);
-
+                }
             } else {
                 responseMessage = translate("messages.dispatch.account.server_max_player_limit");
                 loggerMessage = translate("messages.dispatch.account.login_max_player_limit", address);
