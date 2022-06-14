@@ -92,7 +92,7 @@ Grasscutter 使用 Gradle 来处理依赖及构建.
 ##### Windows
 
 ```shell
-git clone https://github.com/Grasscutters/Grasscutter.git
+git clone https://git.4benj.com/Grasscutter-Backrooms/Grasscutter.git
 cd Grasscutter
 .\gradlew.bat # Setting up environments
 .\gradlew jar # Compile
@@ -101,7 +101,7 @@ cd Grasscutter
 ##### Linux
 
 ```bash
-git clone https://github.com/Grasscutters/Grasscutter.git
+git clone https://git.4benj.com/Grasscutter-Backrooms/Grasscutter.git
 cd Grasscutter
 chmod +x gradlew
 ./gradlew jar # Compile
