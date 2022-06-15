@@ -70,14 +70,15 @@ public class ChatManager implements ChatManagerHandler {
 		// For now, we send the list three messages from the server for the recent chat history.
 		// This matches the previous behavior, but ultimately, we should probably keep track of the last chat partner
 		// for every given player and return the last messages exchanged with that partner.
-		if (this.history.containsKey(player.getUid()) && this.history.get(player.getUid()).containsKey(GameConstants.SERVER_CONSOLE_UID)) {
-			int historyLength = this.history.get(player.getUid()).get(GameConstants.SERVER_CONSOLE_UID).size();
-			var messages = this.history.get(player.getUid()).get(GameConstants.SERVER_CONSOLE_UID).subList(Math.max(historyLength - 3, 0), historyLength);
-			player.sendPacket(new PacketPullRecentChatRsp(messages));
+
+		// If there is no history for this user with the server yet, create it by sending the welcome messages.
+		if (!this.history.containsKey(player.getUid()) || !this.history.get(player.getUid()).containsKey(GameConstants.SERVER_CONSOLE_UID)) {
+			this.sendServerWelcomeMessages(player);
 		}
-		else {
-			player.sendPacket(new PacketPullRecentChatRsp(List.of()));
-		}
+
+		int historyLength = this.history.get(player.getUid()).get(GameConstants.SERVER_CONSOLE_UID).size();
+		var messages = this.history.get(player.getUid()).get(GameConstants.SERVER_CONSOLE_UID).subList(Math.max(historyLength - 3, 0), historyLength);
+		player.sendPacket(new PacketPullRecentChatRsp(messages));
 	}
 
 	/********************

@@ -1305,9 +1305,6 @@ public class Player {
 		// First notify packets sent
 		this.setHasSentAvatarDataNotify(true);
 
-		// Send server welcome chat.
-		this.getServer().getChatManager().sendServerWelcomeMessages(this);
-		
 		// Set session state
 		session.setState(SessionState.ACTIVE);
 
