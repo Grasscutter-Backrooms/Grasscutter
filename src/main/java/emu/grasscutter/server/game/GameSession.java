@@ -175,15 +175,14 @@ public class GameSession implements GameSessionManager.KcpChannel {
 	@Override
 	public void handleReceive(byte[] bytes) {
 		// Decrypt and turn back into a packet
-		byte[] byteData = Utils.byteBufToArray(data);
 		if(useSecretKey()){
-			Crypto.xor(byteData, Crypto.ENCRYPT_KEY, false);
+			Crypto.xor(bytes, Crypto.ENCRYPT_KEY, false);
 		}
 		else{
-			Crypto.xor(byteData, Crypto.ENCRYPT_KEY, true);
+			Crypto.xor(bytes, Crypto.ENCRYPT_KEY, true);
 		}
 
-		ByteBuf packet = Unpooled.wrappedBuffer(byteData);
+		ByteBuf packet = Unpooled.wrappedBuffer(bytes);
 		
 		// Log
 		//logPacket(packet);
