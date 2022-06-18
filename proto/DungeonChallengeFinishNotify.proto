@@ -16,8 +16,8 @@ message DungeonChallengeFinishNotify {
 	}
 
 	oneof Detail {
-		ChannellerSlabLoopDungeonResultInfo channeller_slab_loop_dungeon_result_info = 101;
-		EffigyChallengeDungeonResultInfo effigy_challenge_dungeon_result_info = 102;
+		ChannellerSlabLoopDungeonResultInfo channeller_slab_loop_dungeon_result_info = 1758;
+		EffigyChallengeDungeonResultInfo effigy_challenge_dungeon_result_info = 913;
 	}
 	uint32 challenge_index = 11;
 	bool is_success = 4;
