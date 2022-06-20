@@ -1,11 +1,9 @@
 package emu.grasscutter.server.http.dispatch;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.Grasscutter.ServerRunMode;
-import emu.grasscutter.net.proto.QueryCurrRegionHttpRspOuterClass.*;
-import emu.grasscutter.net.proto.RegionInfoOuterClass;
+import emu.grasscutter.net.proto.QueryCurrRegionHttpRspOuterClass.QueryCurrRegionHttpRsp;
 import emu.grasscutter.net.proto.RegionInfoOuterClass.RegionInfo;
 import emu.grasscutter.net.proto.RegionSimpleInfoOuterClass.RegionSimpleInfo;
 import emu.grasscutter.server.event.dispatch.QueryAllRegionsEvent;
@@ -21,7 +19,6 @@ import express.http.Response;
 import io.javalin.Javalin;
 
 import javax.crypto.Cipher;
-import java.io.File;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.security.*;
@@ -31,7 +28,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static emu.grasscutter.Configuration.*;
-import static emu.grasscutter.net.proto.QueryRegionListHttpRspOuterClass.*;
+import static emu.grasscutter.net.proto.QueryRegionListHttpRspOuterClass.QueryRegionListHttpRsp;
 
 /**
  * Handles requests related to region queries.

@@ -36,7 +36,7 @@ public class BasePacket {
 	}
 
 	public int getOpcode() {
-		return opcode;
+		return this.opcode;
 	}
 
 	public void setOpcode(int opcode) {
@@ -44,7 +44,7 @@ public class BasePacket {
 	}
 
 	public boolean useDispatchKey() {
-		return useDispatchKey;
+		return this.useDispatchKey;
 	}
 
 	public void setUseDispatchKey(boolean useDispatchKey) {
@@ -52,7 +52,7 @@ public class BasePacket {
 	}
 
 	public byte[] getHeader() {
-		return header;
+		return this.header;
 	}
 
 	public void setHeader(byte[] header) {
@@ -60,11 +60,11 @@ public class BasePacket {
 	}
 
 	public boolean shouldBuildHeader() {
-		return shouldBuildHeader;
+		return this.shouldBuildHeader;
 	}
 
 	public byte[] getData() {
-		return data;
+		return this.data;
 	}
 
 	public void setData(byte[] data) {
@@ -84,27 +84,27 @@ public class BasePacket {
 		if (this.getHeader() != null && clientSequence == 0) {
 			return this;
 		}
-		setHeader(PacketHead.newBuilder().setClientSequenceId(clientSequence).setTimestamp(System.currentTimeMillis()).build().toByteArray());
+		this.setHeader(PacketHead.newBuilder().setClientSequenceId(clientSequence).setTimestamp(System.currentTimeMillis()).build().toByteArray());
 		return this;
 	}
 	
 	public byte[] build() {
-		if (getHeader() == null) {
+		if (this.getHeader() == null) {
 			this.header = new byte[0];
 		}
 		
-		if (getData() == null) {
+		if (this.getData() == null) {
 			this.data = new byte[0];
 		}
 		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(2 + 2 + 2 + 4 + getHeader().length + getData().length + 2);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(2 + 2 + 2 + 4 + this.getHeader().length + this.getData().length + 2);
 		
 		this.writeUint16(baos, const1);
-		this.writeUint16(baos, opcode);
-		this.writeUint16(baos, header.length);
-		this.writeUint32(baos, data.length);
-		this.writeBytes(baos, header);
-		this.writeBytes(baos, data);
+		this.writeUint16(baos, this.opcode);
+		this.writeUint16(baos, this.header.length);
+		this.writeUint32(baos, this.data.length);
+		this.writeBytes(baos, this.header);
+		this.writeBytes(baos, this.data);
 		this.writeUint16(baos, const2);
 		
 		byte[] packet = baos.toByteArray();
