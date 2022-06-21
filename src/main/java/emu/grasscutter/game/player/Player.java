@@ -12,6 +12,7 @@ import emu.grasscutter.game.ability.AbilityManager;
 import emu.grasscutter.game.avatar.Avatar;
 import emu.grasscutter.game.avatar.AvatarProfileData;
 import emu.grasscutter.game.avatar.AvatarStorage;
+import emu.grasscutter.game.battlepass.BattlePassManager;
 import emu.grasscutter.game.entity.*;
 import emu.grasscutter.game.expedition.ExpeditionInfo;
 import emu.grasscutter.game.friends.FriendsList;
@@ -200,6 +201,8 @@ public class Player {
     private GameHome home;
     @Transient
     private FurnitureManager furnitureManager;
+	@Transient
+	private BattlePassManager battlePassManager;
 
     private long springLastUsed;
     private HashMap<String, MapMark> mapMarks;
@@ -1251,6 +1254,15 @@ public class Player {
         return this.furnitureManager;
     }
 
+	public BattlePassManager getBattlePassManager(){
+		return battlePassManager;
+	}
+
+	public void loadBattlePassManager() {
+		if (this.battlePassManager != null) return;
+		this.battlePassManager = DatabaseHelper.loadBattlePass(this);
+	}
+
     public AbilityManager getAbilityManager() {
         return this.abilityManager;
     }
@@ -1364,6 +1376,8 @@ public class Player {
         this.getMailHandler().loadFromDatabase();
         this.getQuestManager().loadFromDatabase();
 
+		this.loadBattlePassManager();
+
     }
 
     public void onLogin() {
@@ -1395,6 +1409,7 @@ public class Player {
         this.session.send(new PacketPlayerStoreNotify(this));
         this.session.send(new PacketAvatarDataNotify(this));
         this.session.send(new PacketFinishedParentQuestNotify(this));
+		this.session.send(new PacketBattlePassAllDataNotify(this));
         this.session.send(new PacketQuestListNotify(this));
         this.session.send(new PacketCodexDataFullNotify(this));
         this.session.send(new PacketAllWidgetDataNotify(this));
