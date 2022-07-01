@@ -14,7 +14,7 @@ public class ServerLogEventAppender<E> extends AppenderBase<E> {
     @Override
     protected void append(E event) {
         byte[] byteArray = this.encoder.encode(event);
-        ServerLogEvent sle = new ServerLogEvent(ServerEvent.Type.GAME, (ILoggingEvent) event, new String(byteArray, StandardCharsets.UTF_8));
+        ServerLogEvent sle = new ServerLogEvent((ILoggingEvent) event, new String(byteArray, StandardCharsets.UTF_8));
         sle.call();
     }
 

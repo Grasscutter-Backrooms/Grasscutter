@@ -62,34 +62,34 @@ public class ShopManager {
         };
     }
 
-    private void loadShop() {
-        try (Reader fileReader = new InputStreamReader(DataLoader.load("Shop.json"))) {
-            this.getShopData().clear();
-            List<ShopTable> banners = Grasscutter.getGsonFactory().fromJson(fileReader, TypeToken.getParameterized(Collection.class, ShopTable.class).getType());
-            if (banners.size() > 0) {
-                for (ShopTable shopTable : banners) {
-                    for (ShopInfo cost : shopTable.getItems()) {
-                        if (cost.getCostItemList() != null) {
-                            Iterator<ItemParamData> iterator = cost.getCostItemList().iterator();
-                            while (iterator.hasNext()) {
-                                ItemParamData ipd = iterator.next();
-                                if (ipd.getId() == 201) {
-                                    cost.setHcoin(cost.getHcoin() + ipd.getCount());
-                                    iterator.remove();
-                                }
-                                if (ipd.getId() == 203) {
-                                    cost.setMcoin(cost.getMcoin() + ipd.getCount());
-                                    iterator.remove();
-                                }
-                            }
-                        }
-                    }
-                    this.getShopData().put(shopTable.getShopId(), shopTable.getItems());
-                }
-                Grasscutter.getLogger().info("Shop data successfully loaded.");
-            } else {
-                Grasscutter.getLogger().error("Unable to load shop data. Shop data size is 0.");
-            }
+	private void loadShop() {
+		try (Reader fileReader = new InputStreamReader(DataLoader.load("Shop.json"))) {
+			getShopData().clear();
+			List<ShopTable> banners = Grasscutter.getGsonFactory().fromJson(fileReader, TypeToken.getParameterized(Collection.class, ShopTable.class).getType());
+			if(banners.size() > 0) {
+				for (ShopTable shopTable : banners) {
+					for (ShopInfo cost : shopTable.getItems()) {
+						if (cost.getCostItemList() != null) {
+							Iterator<ItemParamData> iterator = cost.getCostItemList().iterator();
+							while (iterator.hasNext()) {
+								ItemParamData ipd = iterator.next();
+								if (ipd.getId() == 201) {
+									cost.setHcoin(cost.getHcoin() + ipd.getCount());
+									iterator.remove();
+								}
+								if (ipd.getId() == 203) {
+									cost.setMcoin(cost.getMcoin() + ipd.getCount());
+									iterator.remove();
+								}
+							}
+						}
+					}
+					getShopData().put(shopTable.getShopId(), shopTable.getItems());
+				}
+				Grasscutter.getLogger().debug("Shop data successfully loaded.");
+			} else {
+				Grasscutter.getLogger().error("Unable to load shop data. Shop data size is 0.");
+			}
 
             if (GAME_OPTIONS.enableShopItems) {
                 GameData.getShopGoodsDataEntries().forEach((k, v) -> {
@@ -106,35 +106,35 @@ public class ShopManager {
         }
     }
 
-    private void loadShopChest() {
-        try (Reader fileReader = new InputStreamReader(DataLoader.load("ShopChest.json"))) {
-            this.getShopChestData().clear();
-            List<ShopChestTable> shopChestTableList = Grasscutter.getGsonFactory().fromJson(fileReader, TypeToken.getParameterized(Collection.class, ShopChestTable.class).getType());
-            if (shopChestTableList.size() > 0) {
-                this.getShopChestData().addAll(shopChestTableList);
-                Grasscutter.getLogger().info("ShopChest data successfully loaded.");
-            } else {
-                Grasscutter.getLogger().error("Unable to load ShopChest data. ShopChest data size is 0.");
-            }
-        } catch (Exception e) {
-            Grasscutter.getLogger().error("Unable to load ShopChest data.", e);
-        }
-    }
+	private void loadShopChest() {
+		try (Reader fileReader = new InputStreamReader(DataLoader.load("ShopChest.json"))) {
+			getShopChestData().clear();
+			List<ShopChestTable> shopChestTableList = Grasscutter.getGsonFactory().fromJson(fileReader, TypeToken.getParameterized(Collection.class, ShopChestTable.class).getType());
+			if (shopChestTableList.size() > 0) {
+				getShopChestData().addAll(shopChestTableList);
+				Grasscutter.getLogger().debug("ShopChest data successfully loaded.");
+			} else {
+				Grasscutter.getLogger().error("Unable to load ShopChest data. ShopChest data size is 0.");
+			}
+		} catch (Exception e) {
+			Grasscutter.getLogger().error("Unable to load ShopChest data.", e);
+		}
+	}
 
-    private void loadShopChestBatchUse() {
-        try (Reader fileReader = new InputStreamReader(DataLoader.load("ShopChestBatchUse.json"))) {
-            this.getShopChestBatchUseData().clear();
-            List<ShopChestBatchUseTable> shopChestBatchUseTableList = Grasscutter.getGsonFactory().fromJson(fileReader, TypeToken.getParameterized(Collection.class, ShopChestBatchUseTable.class).getType());
-            if (shopChestBatchUseTableList.size() > 0) {
-                this.getShopChestBatchUseData().addAll(shopChestBatchUseTableList);
-                Grasscutter.getLogger().info("ShopChestBatchUse data successfully loaded.");
-            } else {
-                Grasscutter.getLogger().error("Unable to load ShopChestBatchUse data. ShopChestBatchUse data size is 0.");
-            }
-        } catch (Exception e) {
-            Grasscutter.getLogger().error("Unable to load ShopChestBatchUse data.", e);
-        }
-    }
+	private void loadShopChestBatchUse() {
+		try (Reader fileReader = new InputStreamReader(DataLoader.load("ShopChestBatchUse.json"))) {
+			getShopChestBatchUseData().clear();
+			List<ShopChestBatchUseTable> shopChestBatchUseTableList = Grasscutter.getGsonFactory().fromJson(fileReader, TypeToken.getParameterized(Collection.class, ShopChestBatchUseTable.class).getType());
+			if (shopChestBatchUseTableList.size() > 0) {
+				getShopChestBatchUseData().addAll(shopChestBatchUseTableList);
+				Grasscutter.getLogger().debug("ShopChestBatchUse data successfully loaded.");
+			} else {
+				Grasscutter.getLogger().error("Unable to load ShopChestBatchUse data. ShopChestBatchUse data size is 0.");
+			}
+		} catch (Exception e) {
+			Grasscutter.getLogger().error("Unable to load ShopChestBatchUse data.", e);
+		}
+	}
 
     public synchronized void load() {
         this.loadShop();

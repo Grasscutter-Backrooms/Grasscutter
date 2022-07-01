@@ -3,12 +3,13 @@ package emu.grasscutter.server.event.internal;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import emu.grasscutter.server.event.types.ServerEvent;
 
-public class ServerLogEvent extends ServerEvent {
-    ILoggingEvent loggingEvent;
-    String consoleMessage;
+public final class ServerLogEvent extends ServerEvent {
+    private final ILoggingEvent loggingEvent;
+    private final String consoleMessage;
 
-    public ServerLogEvent(Type type, ILoggingEvent loggingEvent, String consoleMessage) {
-        super(type);
+    public ServerLogEvent(ILoggingEvent loggingEvent, String consoleMessage) {
+        super(Type.GAME);
+
         this.loggingEvent = loggingEvent;
         this.consoleMessage = consoleMessage;
     }

@@ -41,11 +41,11 @@ Have fun developers :)
 
 * [MongoDB](https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-5.0.9-signed.msi) (推荐 4.0+)
 
-* Proxy daemon: mitmproxy (推荐使用mitmdump), Fiddler Classic, 等
+* 代理程序: mitmproxy (推荐 mitmdump), Fiddler Classic 等
 
 ### 运行
 
-**注:** 如果您从旧版本升级到新版本，最好删除 `config.json` 并启动服务端jar来重新生成它
+**注意:** 从旧版本升级到新版本, 需要删除 `config.json`
 
 1. 获取 `grasscutter.jar`
    - 从 [actions](https://github.com/Grasscutters/Grasscutter/suites/6895963598/artifacts/267483297) 中下载

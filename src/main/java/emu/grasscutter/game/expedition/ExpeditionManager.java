@@ -39,7 +39,7 @@ public class ExpeditionManager {
                 for (ExpeditionRewardInfo di : banners) {
                     this.getExpeditionRewardDataList().put(di.getExpId(), di.getExpeditionRewardDataList());
                 }
-                Grasscutter.getLogger().info("Expedition reward successfully loaded.");
+                Grasscutter.getLogger().debug("Expedition reward successfully loaded.");
             } else {
                 Grasscutter.getLogger().error("Unable to load expedition reward. Expedition reward size is 0.");
             }

@@ -9,8 +9,7 @@ import java.util.List;
 
 @ResourceType(name = "BattlePassRewardExcelConfigData.json")
 @Getter
-@Setter
-public class BattlePassRewardExcelConfigData extends GameResource {
+public class BattlePassRewardData extends GameResource {
     private int indexId;
     private int level;
     private List<Integer> freeRewardIdList;
@@ -18,7 +17,9 @@ public class BattlePassRewardExcelConfigData extends GameResource {
 
     @Override
     public int getId() {
-        return this.level;
+        // Reward ID is a combination of index and level.
+        // We do this to get a unique ID.
+        return this.indexId * 100 + this.level;
     }
 
     @Override

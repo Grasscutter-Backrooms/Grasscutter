@@ -11,6 +11,7 @@ import emu.grasscutter.game.inventory.GameItem;
 import emu.grasscutter.game.inventory.ItemType;
 import emu.grasscutter.game.player.Player;
 import emu.grasscutter.game.props.ActionReason;
+import emu.grasscutter.game.props.WatcherTriggerType;
 import emu.grasscutter.game.world.Scene;
 import emu.grasscutter.net.proto.GadgetInteractReqOuterClass.GadgetInteractReq;
 import emu.grasscutter.scripts.constants.EventType;
@@ -35,11 +36,11 @@ import com.google.gson.reflect.TypeToken;
 
 public class DungeonChallenge extends WorldChallenge {
 
-    /**
-     * has more challenge
-     */
-    private boolean stage;
-    private IntSet rewardedPlayers;
+	/**
+	 * has more challenge
+	 */
+	private boolean stage;
+	private IntSet rewardedPlayers;
 
 	private final static Int2ObjectMap<List<DungeonDropEntry>> dungeonDropData = new Int2ObjectOpenHashMap<>();
 
@@ -52,7 +53,7 @@ public class DungeonChallenge extends WorldChallenge {
 				dungeonDropData.put(entry.getDungeonId(), entry.getDrops());
 			}
 
-			Grasscutter.getLogger().info("Loaded {} dungeon drop data entries.", dungeonDropData.size());
+			Grasscutter.getLogger().debug("Loaded {} dungeon drop data entries.", dungeonDropData.size());
 		}
 		catch (Exception ex) {
 			Grasscutter.getLogger().error("Unable to load dungeon drop data.", ex);
@@ -68,21 +69,21 @@ public class DungeonChallenge extends WorldChallenge {
 		this.setRewardedPlayers(new IntOpenHashSet());
 	}
 
-    public boolean isStage() {
-        return this.stage;
-    }
+	public boolean isStage() {
+		return stage;
+	}
 
-    public void setStage(boolean stage) {
-        this.stage = stage;
-    }
+	public void setStage(boolean stage) {
+		this.stage = stage;
+	}
 
-    public IntSet getRewardedPlayers() {
-        return this.rewardedPlayers;
-    }
+	public IntSet getRewardedPlayers() {
+		return rewardedPlayers;
+	}
 
-    public void setRewardedPlayers(IntSet rewardedPlayers) {
-        this.rewardedPlayers = rewardedPlayers;
-    }
+	public void setRewardedPlayers(IntSet rewardedPlayers) {
+		this.rewardedPlayers = rewardedPlayers;
+	}
 
 	@Override
 	public void done() {
@@ -98,6 +99,8 @@ public class DungeonChallenge extends WorldChallenge {
 			getScene().getDungeonSettleObservers().forEach(o -> o.onDungeonSettle(getScene()));
 			getScene().getScriptManager().callEvent(EventType.EVENT_DUNGEON_SETTLE,
 					new ScriptArgs(this.isSuccess() ? 1 : 0));
+			// Battle pass trigger
+			this.getScene().getPlayers().forEach(p -> p.getBattlePassManager().triggerMission(WatcherTriggerType.TRIGGER_FINISH_DUNGEON));
 		}
 	}
 

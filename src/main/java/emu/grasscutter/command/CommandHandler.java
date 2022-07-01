@@ -2,7 +2,10 @@ package emu.grasscutter.command;
 
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.game.player.Player;
+import emu.grasscutter.server.event.game.CommandResponseEvent;
 import emu.grasscutter.server.event.game.ReceiveCommandFeedbackEvent;
+import emu.grasscutter.server.event.types.ServerEvent;
+import static emu.grasscutter.utils.Language.translate;
 
 import java.util.List;
 
@@ -24,6 +27,7 @@ public interface CommandHandler {
             return;
         }
 
+        // Send message to target.
         if (player == null) {
             Grasscutter.getLogger().info(event.getMessage());
         } else {

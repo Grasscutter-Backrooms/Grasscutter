@@ -65,11 +65,11 @@ public class SceneMeta {
             this.blocks = blocks.stream().collect(Collectors.toMap(b -> b.id, b -> b));
             this.sceneBlockIndex = SceneIndexManager.buildIndex(2, blocks, SceneBlock::toRectangle);
 
-        } catch (ScriptException e) {
-            Grasscutter.getLogger().error("Error running script", e);
+        } catch (ScriptException exception) {
+            Grasscutter.getLogger().error("An error occurred while running a script.", exception);
             return null;
         }
-        Grasscutter.getLogger().info("scene {} metadata is loaded successfully.", sceneId);
+        Grasscutter.getLogger().debug("Successfully loaded metadata in scene {}.", sceneId);
         return this;
     }
 }

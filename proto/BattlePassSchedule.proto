@@ -20,4 +20,5 @@ message BattlePassSchedule {
 	BattlePassProduct product_info = 13;
 	bool is_viewed = 11;
 	uint32 cur_cycle_points = 3;
+	uint32 JPFMGBEBBBJ = 6;
 }

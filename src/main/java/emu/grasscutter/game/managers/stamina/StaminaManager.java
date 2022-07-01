@@ -110,8 +110,8 @@ public class StaminaManager {
     }};
 
     private final Logger logger = Grasscutter.getLogger();
-    public final static int GlobalCharacterMaximumStamina = 24000;
-    public final static int GlobalVehicleMaxStamina = 24000;
+    public final static int GlobalCharacterMaximumStamina = PlayerProperty.PROP_MAX_STAMINA.getMax();
+    public final static int GlobalVehicleMaxStamina = PlayerProperty.PROP_MAX_STAMINA.getMax();
     private Position currentCoordinates = new Position(0, 0, 0);
     private Position previousCoordinates = new Position(0, 0, 0);
     private MotionState currentState = MotionState.MOTION_STATE_STANDBY;
@@ -283,14 +283,13 @@ public class StaminaManager {
     // Returns new stamina and sends PlayerPropNotify or VehicleStaminaNotify
     public int setStamina(GameSession session, String reason, int newStamina, boolean isCharacterStamina) {
         // Target Player
-        if (!GAME_OPTIONS.staminaUsage || session.getPlayer().getStamina()) {
-            newStamina = this.getMaxCharacterStamina();
+        if (!GAME_OPTIONS.staminaUsage || session.getPlayer().getUnlimitedStamina()) {
+            newStamina = getMaxCharacterStamina();
         }
 
         // set stamina if is character stamina
         if (isCharacterStamina) {
-            this.player.setProperty(PlayerProperty.PROP_CUR_PERSIST_STAMINA, newStamina);
-            session.send(new PacketPlayerPropNotify(this.player, PlayerProperty.PROP_CUR_PERSIST_STAMINA));
+            player.setProperty(PlayerProperty.PROP_CUR_PERSIST_STAMINA, newStamina);
         } else {
             this.vehicleStamina = newStamina;
             session.send(new PacketVehicleStaminaNotify(this.vehicleId, ((float) newStamina) / 100));

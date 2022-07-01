@@ -17,22 +17,22 @@ public class GadgetChest extends GadgetContent {
         super(gadget);
     }
 
-    public boolean onInteract(Player player, GadgetInteractReq req) {
-        var chestInteractHandlerMap = getGadget().getScene().getWorld().getServer().getWorldDataManager().getChestInteractHandlerMap();
-        var handler = chestInteractHandlerMap.get(getGadget().getGadgetData().getJsonName());
-        if(handler == null){
-            Grasscutter.getLogger().warn("Could not found the handler of this type of Chests {}", getGadget().getGadgetData().getJsonName());
-            return false;
-        }
+	public boolean onInteract(Player player, GadgetInteractReq req) {
+		var chestInteractHandlerMap = getGadget().getScene().getWorld().getServer().getWorldDataManager().getChestInteractHandlerMap();
+		var handler = chestInteractHandlerMap.get(getGadget().getGadgetData().getJsonName());
+		if(handler == null){
+			Grasscutter.getLogger().warn("Could not found the handler of this type of Chests {}", getGadget().getGadgetData().getJsonName());
+			return false;
+		}
 
-        if(req.getOpType() == InterOpType.INTER_OP_TYPE_START && handler.isTwoStep()){
-            player.sendPacket(new PacketGadgetInteractRsp(getGadget(), InteractType.INTERACT_TYPE_OPEN_CHEST, InterOpType.INTER_OP_TYPE_START));
-            return false;
-        }else{
-            var success = handler.onInteract(this, player);
-            if (!success){
-                return false;
-            }
+		if(req.getOpType() == InterOpType.INTER_OP_TYPE_START && handler.isTwoStep()){
+			player.sendPacket(new PacketGadgetInteractRsp(getGadget(), InteractType.INTERACT_TYPE_OPEN_CHEST, InterOpType.INTER_OP_TYPE_START));
+			return false;
+		}else{
+			var success = handler.onInteract(this, player);
+			if (!success){
+				return false;
+			}
 
             this.getGadget().updateState(ScriptGadgetState.ChestOpened);
             player.sendPacket(new PacketGadgetInteractRsp(this.getGadget(), InteractTypeOuterClass.InteractType.INTERACT_TYPE_OPEN_CHEST));

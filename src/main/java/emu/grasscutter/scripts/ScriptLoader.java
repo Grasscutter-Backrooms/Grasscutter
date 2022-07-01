@@ -24,29 +24,29 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ScriptLoader {
-    private static ScriptEngineManager sm;
-    private static ScriptEngine engine;
-    private static ScriptEngineFactory factory;
-    private static String fileType;
-    private static Serializer serializer;
-    private static ScriptLib scriptLib;
-    private static LuaValue scriptLibLua;
-    /**
-     * suggest GC to remove it if the memory is less
-     */
-    private static final Map<String, SoftReference<CompiledScript>> scriptsCache = new ConcurrentHashMap<>();
-    /**
-     * sceneId - SceneMeta
-     */
-    private static final Map<Integer, SoftReference<SceneMeta>> sceneMetaCache = new ConcurrentHashMap<>();
+	private static ScriptEngineManager sm;
+	private static ScriptEngine engine;
+	private static ScriptEngineFactory factory;
+	private static String fileType;
+	private static Serializer serializer;
+	private static ScriptLib scriptLib;
+	private static LuaValue scriptLibLua;
+	/**
+	 * suggest GC to remove it if the memory is less
+	 */
+	private static Map<String, SoftReference<CompiledScript>> scriptsCache = new ConcurrentHashMap<>();
+	/**
+	 * sceneId - SceneMeta
+	 */
+	private static Map<Integer, SoftReference<SceneMeta>> sceneMetaCache = new ConcurrentHashMap<>();
 
-    public synchronized static void init() throws Exception {
-        if (sm != null) {
-            throw new Exception("Script loader already initialized");
-        }
+	public synchronized static void init() throws Exception {
+		if (sm != null) {
+			throw new Exception("Script loader already initialized");
+		}
 
-        // Create script engine
-        sm = new ScriptEngineManager();
+		// Create script engine
+		sm = new ScriptEngineManager();
         engine = sm.getEngineByName("luaj");
         factory = getEngine().getFactory();
 
@@ -56,83 +56,82 @@ public class ScriptLoader {
 
         // Set engine to replace require as a temporary fix to missing scripts
         LuajContext ctx = (LuajContext) engine.getContext();
-        ctx.globals.set("require", new OneArgFunction() {
-            @Override
-            public LuaValue call(LuaValue arg0) {
-                return LuaValue.ZERO;
-            }
-        });
+		ctx.globals.set("require", new OneArgFunction() {
+		    @Override
+		    public LuaValue call(LuaValue arg0) {
+		        return LuaValue.ZERO;
+		    }
+		});
 
-        LuaTable table = new LuaTable();
-        Arrays.stream(EntityType.values()).forEach(e -> table.set(e.name().toUpperCase(), e.getValue()));
-        ctx.globals.set("EntityType", table);
+		LuaTable table = new LuaTable();
+		Arrays.stream(EntityType.values()).forEach(e -> table.set(e.name().toUpperCase(), e.getValue()));
+		ctx.globals.set("EntityType", table);
 
-        ctx.globals.set("EventType", CoerceJavaToLua.coerce(new EventType())); // TODO - make static class to avoid instantiating a new class every scene
-        ctx.globals.set("GadgetState", CoerceJavaToLua.coerce(new ScriptGadgetState()));
-        ctx.globals.set("RegionShape", CoerceJavaToLua.coerce(new ScriptRegionShape()));
+		ctx.globals.set("EventType", CoerceJavaToLua.coerce(new EventType())); // TODO - make static class to avoid instantiating a new class every scene
+		ctx.globals.set("GadgetState", CoerceJavaToLua.coerce(new ScriptGadgetState()));
+		ctx.globals.set("RegionShape", CoerceJavaToLua.coerce(new ScriptRegionShape()));
 
-        scriptLib = new ScriptLib();
-        scriptLibLua = CoerceJavaToLua.coerce(scriptLib);
-        ctx.globals.set("ScriptLib", scriptLibLua);
-    }
+		scriptLib = new ScriptLib();
+		scriptLibLua = CoerceJavaToLua.coerce(scriptLib);
+		ctx.globals.set("ScriptLib", scriptLibLua);
+	}
 
-    public static ScriptEngine getEngine() {
-        return engine;
-    }
+	public static ScriptEngine getEngine() {
+		return engine;
+	}
 
-    public static String getScriptType() {
-        return fileType;
-    }
+	public static String getScriptType() {
+		return fileType;
+	}
 
-    public static Serializer getSerializer() {
-        return serializer;
-    }
+	public static Serializer getSerializer() {
+		return serializer;
+	}
 
-    public static ScriptLib getScriptLib() {
-        return scriptLib;
-    }
+	public static ScriptLib getScriptLib() {
+		return scriptLib;
+	}
 
-    public static LuaValue getScriptLibLua() {
-        return scriptLibLua;
-    }
+	public static LuaValue getScriptLibLua() {
+		return scriptLibLua;
+	}
 
-    public static <T> Optional<T> tryGet(SoftReference<T> softReference) {
-        try {
-            return Optional.ofNullable(softReference.get());
-        } catch (NullPointerException npe) {
-            return Optional.empty();
-        }
-    }
+	public static <T> Optional<T> tryGet(SoftReference<T> softReference){
+		try{
+			return Optional.ofNullable(softReference.get());
+		}catch (NullPointerException npe){
+			return Optional.empty();
+		}
+	}
+	public static CompiledScript getScriptByPath(String path) {
+		var sc = tryGet(scriptsCache.get(path));
+		if (sc.isPresent()) {
+			return sc.get();
+		}
 
-    public static CompiledScript getScriptByPath(String path) {
-        var sc = tryGet(scriptsCache.get(path));
-        if (sc.isPresent()) {
-            return sc.get();
-        }
+		Grasscutter.getLogger().debug("Loading script " + path);
 
-        Grasscutter.getLogger().info("Loading script " + path);
+		File file = new File(path);
 
-        File file = new File(path);
+		if (!file.exists()) return null;
 
-        if (!file.exists()) return null;
+		try (FileReader fr = new FileReader(file)) {
+			var script = ((Compilable) getEngine()).compile(fr);
+			scriptsCache.put(path, new SoftReference<>(script));
+			return script;
+		} catch (Exception e) {
+			Grasscutter.getLogger().error("Loading script {} failed!", path, e);
+			return null;
+		}
 
-        try (FileReader fr = new FileReader(file)) {
-            var script = ((Compilable) getEngine()).compile(fr);
-            scriptsCache.put(path, new SoftReference<>(script));
-            return script;
-        } catch (Exception e) {
-            Grasscutter.getLogger().error("Loading script {} failed!", path, e);
-            return null;
-        }
+	}
 
-    }
-
-    public static SceneMeta getSceneMeta(int sceneId) {
-        return tryGet(sceneMetaCache.get(sceneId)).orElseGet(() -> {
-            var instance = SceneMeta.of(sceneId);
-            sceneMetaCache.put(sceneId, new SoftReference<>(instance));
-            return instance;
-        });
-    }
+	public static SceneMeta getSceneMeta(int sceneId) {
+		return tryGet(sceneMetaCache.get(sceneId)).orElseGet(() -> {
+			var instance = SceneMeta.of(sceneId);
+			sceneMetaCache.put(sceneId, new SoftReference<>(instance));
+			return instance;
+		});
+	}
 
 }

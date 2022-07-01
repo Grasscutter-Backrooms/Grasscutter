@@ -8,6 +8,7 @@ import emu.grasscutter.server.game.GameServer;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TowerScheduleManager {
@@ -44,6 +45,12 @@ public class TowerScheduleManager {
         }
 
         return data;
+    }
+
+    public List<Integer> getAllFloors() {
+        List<Integer> floors = new ArrayList<>(this.getCurrentTowerScheduleData().getEntranceFloorId());
+        floors.addAll(this.getScheduleFloors());
+        return floors;
     }
 
     public List<Integer> getScheduleFloors() {

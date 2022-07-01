@@ -2,10 +2,13 @@ package emu.grasscutter.server.packet.recv;
 
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.game.entity.GameEntity;
+import emu.grasscutter.game.player.Player;
 import emu.grasscutter.game.props.FightProperty;
 import emu.grasscutter.net.packet.Opcodes;
 import emu.grasscutter.net.packet.PacketHandler;
 import emu.grasscutter.net.packet.PacketOpcodes;
+import emu.grasscutter.net.proto.AttackResultOuterClass;
+import emu.grasscutter.net.proto.AttackResultOuterClass.AttackResult;
 import emu.grasscutter.net.proto.CombatInvocationsNotifyOuterClass.CombatInvocationsNotify;
 import emu.grasscutter.net.proto.CombatInvokeEntryOuterClass.CombatInvokeEntry;
 import emu.grasscutter.net.proto.EntityMoveInfoOuterClass.EntityMoveInfo;
@@ -13,8 +16,11 @@ import emu.grasscutter.net.proto.EvtBeingHitInfoOuterClass.EvtBeingHitInfo;
 import emu.grasscutter.net.proto.MotionInfoOuterClass.MotionInfo;
 import emu.grasscutter.net.proto.MotionStateOuterClass.MotionState;
 import emu.grasscutter.net.proto.PlayerDieTypeOuterClass;
+import emu.grasscutter.server.event.entity.EntityMoveEvent;
+import emu.grasscutter.server.event.game.ReceiveCommandFeedbackEvent;
 import emu.grasscutter.server.game.GameSession;
 import emu.grasscutter.server.packet.send.PacketEntityFightPropUpdateNotify;
+import emu.grasscutter.utils.Position;
 
 @Opcodes(PacketOpcodes.CombatInvocationsNotify)
 public class HandlerCombatInvocationsNotify extends PacketHandler {
@@ -23,30 +29,40 @@ public class HandlerCombatInvocationsNotify extends PacketHandler {
     private long cachedLandingTimeMillisecond = 0;
     private boolean monitorLandingEvent = false;
 
-    @Override
-    public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
-        CombatInvocationsNotify notif = CombatInvocationsNotify.parseFrom(payload);
-        for (CombatInvokeEntry entry : notif.getInvokeListList()) {
-            switch (entry.getArgumentType()) {
-                case COMBAT_TYPE_ARGUMENT_EVT_BEING_HIT:
-                    // Handle damage
-                    EvtBeingHitInfo hitInfo = EvtBeingHitInfo.parseFrom(entry.getCombatData());
-                    session.getPlayer().getAttackResults().add(hitInfo.getAttackResult());
-                    session.getPlayer().getEnergyManager().handleAttackHit(hitInfo);
-                    break;
-                case COMBAT_TYPE_ARGUMENT_ENTITY_MOVE:
-                    // Handle movement
-                    EntityMoveInfo moveInfo = EntityMoveInfo.parseFrom(entry.getCombatData());
-                    GameEntity entity = session.getPlayer().getScene().getEntityById(moveInfo.getEntityId());
-                    if (entity != null) {
-                        // Move player
-                        MotionInfo motionInfo = moveInfo.getMotionInfo();
-                        entity.getPosition().set(motionInfo.getPos());
-                        entity.getRotation().set(motionInfo.getRot());
-                        entity.setLastMoveSceneTimeMs(moveInfo.getSceneTime());
-                        entity.setLastMoveReliableSeq(moveInfo.getReliableSeq());
+	@Override
+	public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
+		CombatInvocationsNotify notif = CombatInvocationsNotify.parseFrom(payload);
+		for (CombatInvokeEntry entry : notif.getInvokeListList()) {
+			switch (entry.getArgumentType()) {
+				case COMBAT_TYPE_ARGUMENT_EVT_BEING_HIT:
+					EvtBeingHitInfo hitInfo = EvtBeingHitInfo.parseFrom(entry.getCombatData());
+					AttackResult attackResult = hitInfo.getAttackResult();
+					Player player = session.getPlayer();
+
+					// Handle damage
+					player.getAttackResults().add(attackResult);
+					player.getEnergyManager().handleAttackHit(hitInfo);
+					break;
+				case COMBAT_TYPE_ARGUMENT_ENTITY_MOVE:
+					// Handle movement
+					EntityMoveInfo moveInfo = EntityMoveInfo.parseFrom(entry.getCombatData());
+					GameEntity entity = session.getPlayer().getScene().getEntityById(moveInfo.getEntityId());
+					if (entity != null) {
+						// Move player
+						MotionInfo motionInfo = moveInfo.getMotionInfo();
                         MotionState motionState = motionInfo.getState();
-                        entity.setMotionState(motionState);
+
+                        // Call entity move event.
+                        EntityMoveEvent event = new EntityMoveEvent(
+                            entity, new Position(motionInfo.getPos()),
+                            new Position(motionInfo.getRot()), motionState);
+                        event.call();
+
+						entity.getPosition().set(motionInfo.getPos());
+						entity.getRotation().set(motionInfo.getRot());
+						entity.setLastMoveSceneTimeMs(moveInfo.getSceneTime());
+						entity.setLastMoveReliableSeq(moveInfo.getReliableSeq());
+						entity.setMotionState(motionState);
 
                         session.getPlayer().getStaminaManager().handleCombatInvocationsNotify(session, moveInfo, entity);
 

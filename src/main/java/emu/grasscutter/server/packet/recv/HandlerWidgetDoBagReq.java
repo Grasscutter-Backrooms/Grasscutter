@@ -38,9 +38,28 @@ public class HandlerWidgetDoBagReq extends PacketHandler {
 
                 session.getPlayer().getScene().addEntity(entity);
 
-                session.send(new PacketWidgetGadgetDataNotify(70500025, List.of(entity.getId())));  // ???
+                session.send(new PacketWidgetGadgetDataNotify(70500025, entity.getId()));  // ???
                 session.send(new PacketWidgetCoolDownNotify(15, System.currentTimeMillis() + 5000L, true));
                 session.send(new PacketWidgetCoolDownNotify(15, System.currentTimeMillis() + 5000L, true));
+                // Send twice, and I don't know why, Ask mhy
+                session.send(new PacketWidgetDoBagRsp());
+            }
+            case 220047 -> {
+                GadgetData gadgetData = GameData.getGadgetDataMap().get(70800058);
+                Position pos = new Position(req.getWidgetCreatorInfo().getLocationInfo().getPos());
+                Position rot = new Position(req.getWidgetCreatorInfo().getLocationInfo().getRot());
+                GameEntity entity = new EntityVehicle(
+                        session.getPlayer().getScene(),
+                        session.getPlayer(),
+                        gadgetData.getId(),
+                        0,
+                        pos,
+                        rot
+                );
+
+                session.getPlayer().getScene().addEntity(entity);
+
+                session.send(new PacketWidgetGadgetDataNotify(70800058, entity.getId()));  // ???
                 // Send twice, and I don't know why, Ask mhy
                 session.send(new PacketWidgetDoBagRsp());
             }

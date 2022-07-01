@@ -4,7 +4,7 @@ option java_package = "emu.grasscutter.net.proto";
 
 import "ActivityNullDetailInfo.proto";
 import "ActivityWatcherInfo.proto";
-
+import "MusicGameActivityDetailInfo.proto";
 message ActivityInfo {
 	oneof Detail {
 		ActivityNullDetailInfo sam_lamp_info = 6;
@@ -37,10 +37,11 @@ message ActivityInfo {
 		ActivityNullDetailInfo moonfin_trial_info = 72;
 		ActivityNullDetailInfo luna_rite_info = 73;
 		ActivityNullDetailInfo plant_flower_info = 74;
-		ActivityNullDetailInfo music_game_info = 75;
+		MusicGameActivityDetailInfo music_game_info = 1612;
 		ActivityNullDetailInfo roguelike_dungoen_info = 76;
 		ActivityNullDetailInfo dig_info = 77;
 	}
+
 	uint32 activity_id = 12;
 	uint32 schedule_id = 10;
 	uint32 begin_time = 13;
@@ -59,4 +60,5 @@ message ActivityInfo {
 	repeated uint32 taken_reward_list = 1262;
 	bool is_hidden = 110;
 	uint32 first_day_start_time = 144;
+
 }
