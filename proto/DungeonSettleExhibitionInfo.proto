@@ -2,8 +2,8 @@ syntax = "proto3";
 
 option java_package = "emu.grasscutter.net.proto";
 
-import "OnlinePlayerInfo.proto";
 import "ExhibitionDisplayInfo.proto";
+import "OnlinePlayerInfo.proto";
 
 message DungeonSettleExhibitionInfo {
 	OnlinePlayerInfo player_info = 3;

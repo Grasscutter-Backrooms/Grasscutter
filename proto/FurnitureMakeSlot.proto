@@ -5,5 +5,5 @@ option java_package = "emu.grasscutter.net.proto";
 import "FurnitureMakeData.proto";
 
 message FurnitureMakeSlot {
-	repeated FurnitureMakeData furniture_make_data_list = 1;
+	repeated FurnitureMakeData furniture_make_data_list = 15;
 }

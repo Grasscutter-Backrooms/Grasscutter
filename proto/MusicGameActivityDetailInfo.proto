@@ -6,7 +6,7 @@ import "MusicBriefInfo.proto";
 import "MusicGameRecord.proto";
 
 message MusicGameActivityDetailInfo {
-	map<uint32, MusicGameRecord> music_game_record_map = 1;
+	map<uint32, MusicGameRecord> music_game_record_map = 8;
 	repeated MusicBriefInfo person_custom_beatmap = 2;
-	repeated MusicBriefInfo others_custom_beatmap = 3;
+	repeated MusicBriefInfo others_custom_beatmap = 12;
 }

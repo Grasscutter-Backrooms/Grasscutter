@@ -5,6 +5,6 @@ option java_package = "emu.grasscutter.net.proto";
 import "Vector.proto";
 
 message HomeBlockSubFieldData {
-	Vector pos = 1;
-	Vector rot = 2;
+	Vector pos = 12;
+	Vector rot = 14;
 }
