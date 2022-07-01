@@ -3,7 +3,7 @@
 
 <div align="center"><a href="https://discord.gg/T5vZU6UyeG"><img alt="Discord - Grasscutter" src="https://img.shields.io/discord/965284035985305680?label=Discord&logo=discord&style=for-the-badge"></a></div>
 
-EN | [中文](README_zh-CN.md)
+EN | [中文](README_zh-CN.md) | [繁中](README_zh-TW.md) | [FR](README_fr-FR.md)
 
 ## Disclaimer
 This is an experimental build of Grasscutter to support 2.7.50/2.8 and is not intended to be used as a public server. \
