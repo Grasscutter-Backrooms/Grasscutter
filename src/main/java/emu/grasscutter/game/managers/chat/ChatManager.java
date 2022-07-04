@@ -17,11 +17,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static emu.grasscutter.Configuration.*;
 
 public class ChatManager implements ChatManagerHandler {
-	static final List<Character> PREFIXES = Arrays.asList('/', '!');
+	static final String PREFIXES = "[/!]";
+	static final Pattern RE_PREFIXES = Pattern.compile(PREFIXES);
+	static final Pattern RE_COMMANDS = Pattern.compile("\n" + PREFIXES);
 
 	// We store the chat history for ongoing sessions in the form
 	//    user id -> chat partner id -> [messages]
@@ -35,6 +38,14 @@ public class ChatManager implements ChatManagerHandler {
 
 	public GameServer getServer() {
 		return server;
+	}
+
+	private boolean tryInvokeCommand(Player sender, Player target, String rawMessage) {
+		if (!RE_PREFIXES.matcher(rawMessage.substring(0, 1)).matches())
+			return false;
+		for (String line : rawMessage.substring(1).split("\n[/!]"))
+			CommandMap.getInstance().invoke(sender, target, line);
+		return true;
 	}
 
 	/********************
@@ -132,8 +143,7 @@ public class ChatManager implements ChatManagerHandler {
 		}
 				
 		// Check if command.
-		if (PREFIXES.contains(message.charAt(0))) {
-			CommandMap.getInstance().invoke(player, target, message.substring(1));
+		if (tryInvokeCommand(player, target, message)) {
 			return;
 		}
 
@@ -177,8 +187,7 @@ public class ChatManager implements ChatManagerHandler {
 		}
 				
 		// Check if command
-		if (PREFIXES.contains(message.charAt(0))) {
-			CommandMap.getInstance().invoke(player, null, message);
+		if (tryInvokeCommand(player, null, message)) {
 			return;
 		}
 
