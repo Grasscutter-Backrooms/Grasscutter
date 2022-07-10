@@ -14,6 +14,7 @@ import emu.grasscutter.game.props.ClimateType;
 import emu.grasscutter.game.props.FightProperty;
 import emu.grasscutter.game.props.LifeState;
 import emu.grasscutter.game.props.SceneType;
+import emu.grasscutter.game.quest.QuestGroupSuite;
 import emu.grasscutter.game.world.SpawnDataEntry.SpawnGroupEntry;
 import emu.grasscutter.net.packet.BasePacket;
 import emu.grasscutter.net.proto.AttackResultOuterClass.AttackResult;
@@ -798,4 +799,22 @@ public class Scene {
 		}
         return npcList;
 	}
+
+    public void loadGroupForQuest(List<QuestGroupSuite> sceneGroupSuite) {
+        if(!scriptManager.isInit()){
+            return;
+        }
+
+        sceneGroupSuite.forEach(i -> {
+            var group = scriptManager.getGroupById(i.getGroup());
+            if(group == null){
+                return;
+            }
+            var suite = group.getSuiteByIndex(i.getSuite());
+            if(suite == null){
+                return;
+            }
+            scriptManager.addGroupSuite(group, suite);
+        });
+    }
 }

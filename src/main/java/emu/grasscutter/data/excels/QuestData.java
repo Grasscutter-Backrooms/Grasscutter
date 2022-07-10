@@ -1,125 +1,121 @@
 package emu.grasscutter.data.excels;
 
+import java.util.Arrays;
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
 import emu.grasscutter.data.GameResource;
 import emu.grasscutter.data.ResourceType;
 import emu.grasscutter.game.quest.enums.LogicType;
 import emu.grasscutter.game.quest.enums.QuestTrigger;
-
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 @ResourceType(name = "QuestExcelConfigData.json")
+@Getter
+@ToString
 public class QuestData extends GameResource {
-    private int subId;
-    private int mainId;
-    private int order;
-    private long descTextMapHash;
+	private int subId;
+	private int mainId;
+	private int order;
+	private long descTextMapHash;
 
-    private boolean finishParent;
-    private boolean isRewind;
+	private boolean finishParent;
+	private boolean isRewind;
 
-    private LogicType acceptCondComb;
-    private QuestCondition[] acceptConditons;
-    private LogicType finishCondComb;
-    private QuestCondition[] finishConditons;
-    private LogicType failCondComb;
-    private QuestCondition[] failConditons;
+	private LogicType acceptCondComb;
+	private LogicType finishCondComb;
+	private LogicType failCondComb;
 
-    private List<QuestParam> acceptCond;
-    private List<QuestParam> finishCond;
-    private List<QuestParam> failCond;
-    private List<QuestExecParam> beginExec;
-    private List<QuestExecParam> finishExec;
-    private List<QuestExecParam> failExec;
+	private List<QuestCondition> acceptCond;
+	private List<QuestCondition> finishCond;
+	private List<QuestCondition> failCond;
+	private List<QuestExecParam> beginExec;
+	private List<QuestExecParam> finishExec;
+	private List<QuestExecParam> failExec;
 
-    public int getId() {
-        return this.subId;
-    }
+	public int getId() {
+		return subId;
+	}
 
-    public int getMainId() {
-        return this.mainId;
-    }
+	public int getMainId() {
+		return mainId;
+	}
 
-    public int getOrder() {
-        return this.order;
-    }
+	public int getOrder() {
+		return order;
+	}
 
-    public long getDescTextMapHash() {
-        return this.descTextMapHash;
-    }
+	public long getDescTextMapHash() {
+		return descTextMapHash;
+	}
 
-    public boolean finishParent() {
-        return this.finishParent;
-    }
+	public boolean finishParent() {
+		return finishParent;
+	}
 
-    public boolean isRewind() {
-        return this.isRewind;
-    }
+	public boolean isRewind() {
+		return isRewind;
+	}
 
-    public LogicType getAcceptCondComb() {
-        return this.acceptCondComb;
-    }
+	public LogicType getAcceptCondComb() {
+		return acceptCondComb;
+	}
 
-    public QuestCondition[] getAcceptCond() {
-        return this.acceptConditons;
-    }
+	public List<QuestCondition> getAcceptCond() {
+		return acceptCond;
+	}
 
-    public LogicType getFinishCondComb() {
-        return this.finishCondComb;
-    }
+	public LogicType getFinishCondComb() {
+		return finishCondComb;
+	}
 
-    public QuestCondition[] getFinishCond() {
-        return this.finishConditons;
-    }
+	public List<QuestCondition> getFinishCond() {
+		return finishCond;
+	}
 
-    public LogicType getFailCondComb() {
-        return this.failCondComb;
-    }
+	public LogicType getFailCondComb() {
+		return failCondComb;
+	}
 
-    public QuestCondition[] getFailCond() {
-        return this.failConditons;
-    }
+	public List<QuestCondition> getFailCond() {
+		return failCond;
+	}
 
-    public void onLoad() {
-        this.acceptConditons = this.acceptCond.stream().filter(p -> p._type != null).map(QuestCondition::new).toArray(QuestCondition[]::new);
-        this.acceptCond = null;
-        this.finishConditons = this.finishCond.stream().filter(p -> p._type != null).map(QuestCondition::new).toArray(QuestCondition[]::new);
-        this.finishCond = null;
-        this.failConditons = this.failCond.stream().filter(p -> p._type != null).map(QuestCondition::new).toArray(QuestCondition[]::new);
-        this.failCond = null;
-    }
+	public void onLoad() {
+		this.acceptCond = acceptCond.stream().filter(p -> p.type != null).toList();
+		this.finishCond = finishCond.stream().filter(p -> p.type != null).toList();
+		this.failCond = failCond.stream().filter(p -> p.type != null).toList();
 
-    public class QuestParam {
-        QuestTrigger _type;
-        int[] _param;
-        String _count;
-    }
+        this.beginExec = beginExec.stream().filter(p -> p.type != null).toList();
+        this.finishExec = finishExec.stream().filter(p -> p.type != null).toList();
+        this.failExec = failExec.stream().filter(p -> p.type != null).toList();
+	}
 
-    public class QuestExecParam {
-        QuestTrigger _type;
-        String[] _param;
-        String _count;
-    }
+    @Data
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+	public class QuestExecParam {
+        @SerializedName("_type")
+		QuestTrigger type;
+        @SerializedName("_param")
+		String[] param;
+        @SerializedName("_count")
+		String count;
+	}
 
-    public static class QuestCondition {
-        private final QuestTrigger type;
-        private final int[] param;
-        private String count;
+    @Data
+	public static class QuestCondition {
+        @SerializedName("_type")
+		private QuestTrigger type;
+        @SerializedName("_param")
+		private int[] param;
+        @SerializedName("_param_str")
+		private String paramStr;
+        @SerializedName("_count")
+		private String count;
 
-        public QuestCondition(QuestParam param) {
-            this.type = param._type;
-            this.param = param._param;
-        }
-
-        public QuestTrigger getType() {
-            return this.type;
-        }
-
-        public int[] getParam() {
-            return this.param;
-        }
-
-        public String getCount() {
-            return this.count;
-        }
-    }
+	}
 }

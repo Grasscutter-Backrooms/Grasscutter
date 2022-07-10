@@ -3,22 +3,11 @@
 
 <div align="center"><a href="https://discord.gg/T5vZU6UyeG"><img alt="Discord - Grasscutter" src="https://img.shields.io/discord/965284035985305680?label=Discord&logo=discord&style=for-the-badge"></a></div>
 
-[EN](README.md) | 中文 | [繁中](README_zh-TW.md) | [FR](README_fr-FR.md)
+[EN](README.md) | 简中 | [繁中](README_zh-TW.md) | [FR](README_fr-FR.md) | [ES](README_es-ES.md) | [HE](README_HE.md) | [RU](README_ru-RU.md)
 
-## 免责声明
-这是Grasscutter的实验版本，支持2.7.50/2.8，不要将其安装在公开的服务器上。 \
-您有破坏别人游戏体验的风险，或者您使他们被封禁的可能性更高。在我们有更好的解决方案之前，请不要泄露。 \
-如果你已经看到这里，那么您很可能了解这个私有存储库的规则。但即便如此，我将在此重复它们：
-```
-- 禁止请求帮助设置私人服务器或客户端
-- 禁止将服务器泄露给非贡献者
-- 禁止将服务器托管为实验服务器
-```
-**违反任何这些规则将导致您失去访问存储库的权限！**
-祝开发者们玩得开心 :)
+**请注意:** 欢迎成为本项目的贡献者。在提交 PR 之前, 请仔细阅读[代码规范](https://github.com/Grasscutters/Grasscutter/blob/stable/CONTRIBUTING.md)。
 
-
-## 当前特性
+## 当前功能
 
 * 登录
 * 战斗
@@ -31,15 +20,15 @@
 
 ## 快速设置指南
 
-**附:** 加入我们的 [Discord](https://discord.gg/T5vZU6UyeG) 获取更多帮助！
+**注意:** 如需帮助请加入 [Discord](https://discord.gg/T5vZU6UyeG)
 
 ### 环境需求
 
-* Java SE - 17 (当您没有Oracle账户，可以使用[镜像](https://mirrors.tuna.tsinghua.edu.cn/Adoptium/17/jdk/))
+* Java SE - 17 ([链接](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html))
 
-  **注:** 如果您仅仅想要简单地**运行服务端**, 那么使用 **jre** 便足够了 
+  **注意:** 如果仅想**运行服务端**, 使用 **jre** 即可
 
-* [MongoDB](https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-5.0.9-signed.msi) (推荐 4.0+)
+* [MongoDB](https://www.mongodb.com/try/download/community) (推荐 4.0+)
 
 * 代理程序: mitmproxy (推荐 mitmdump), Fiddler Classic 等
 
@@ -48,23 +37,23 @@
 **注意:** 从旧版本升级到新版本, 需要删除 `config.json`
 
 1. 获取 `grasscutter.jar`
-   - 从 [actions](https://github.com/Grasscutters/Grasscutter/suites/6895963598/artifacts/267483297) 中下载
-   - [自行构建](#构建)
-2. 在**grasscutter.jar** 所在目录中创建 `resources` 文件夹并将 `BinOutput` 和 `ExcelBinOutput` 放入其中 *(查看 [wiki](https://github.com/Grasscutters/Grasscutter/wiki) 了解更多)*
-3. 通过命令 `java -jar grasscutter.jar` 来运行Grasscutter。 **在此之前请确认MongoDB服务运行正常**
+   - 从 [actions](https://github.com/Grasscutters/Grasscutter/suites/6895963598/artifacts/267483297) 下载
+   - [自行编译](#编译)
+2. 在 JAR 文件根目录中创建 `resources` 文件夹并复制 `BinOutput` 和 `ExcelBinOutput` *(查看 [wiki](https://github.com/Grasscutters/Grasscutter/wiki) 了解更多)*
+3. 命令行 `java -jar grasscutter.jar` 运行 Grasscutter。**在此之前请确认 MongoDB 服务运行正常**
 
-### 连接
+### 客户端连接
 
-½. 在服务器控制台中 [创建账户](#命令列表)。
+½. 在服务器控制台[创建账户](https://github.com/Grasscutters/Grasscutter/wiki/Commands#targeting)
 
-1. 重定向流量: (选其一)
-    - mitmdump:  `mitmdump -s proxy.py -k`
+1. 重定向流量: (选择其中一个)
+    - mitmdump: `mitmdump -s proxy.py -k`
     
       信任 CA 证书:
     
-      ​	**注:** mitmproxy的CA证书通常存放在 `% USERPROFILE%\ .mitmproxy`, 或者你也可以从`http://mitm.it` 中下载它
+      ​	**注意:** mitmproxy 的 CA 证书通常存放在 `%USERPROFILE%\ .mitmproxy`, 或者在 `http://mitm.it` 下载证书
     
-      ​	双击来[安装根证书](https://docs.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate#installing-a-trusted-root-certificate) 或者..
+      ​ 双击[安装根证书](https://docs.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate#installing-a-trusted-root-certificate)或者...
     
       - 使用命令行
     
@@ -72,49 +61,48 @@
         certutil -addstore root %USERPROFILE%\.mitmproxy\mitmproxy-ca-cert.cer
         ```
     
-    - Fiddler Classic: 运行Fiddler Classic, 在设置中开启 `解密https通信` 并将端口切换到除`8888` 以外的任意端口 (工具 -> 选项 -> 连接) 并加载 [此脚本](https://github.lunatic.moe/fiddlerscript).
+    - Fiddler Classic: 运行 Fiddler Classic, 在设置中开启 `解密 https 通信` 并将端口设为除 `8888` 以外的任意端口 (工具 -> 选项 -> 连接) 并加载[此脚本](https://github.lunatic.moe/fiddlerscript)
       
-    - [Hosts文件](https://github.com/Grasscutters/Grasscutter/wiki/Running#traffic-route-map)
+    - [Hosts 文件](https://github.com/Grasscutters/Grasscutter/wiki/Running#traffic-route-map)
     
-2. 设置代理为 `127.0.0.1:8080` 或其它你所设定的端口。
+2. 设置代理为 `127.0.0.1:8080` 或你设置的端口
 
-**你也可以简单地运行 `start.cmd` 来全自动启动服务端并设置代理**
+**也可直接运行 `start.cmd` 一键启动服务端并设置代理, 但必须设置 `JAVA_HOME` 环境变量**
 
-### 构建
+### 编译
 
-Grasscutter 使用 Gradle 来处理依赖及构建。
+Grasscutter 使用 Gradle 来处理依赖及编译。
 
 **依赖:**
 
-- Java SE Development Kits - 17
-- Git
+- [Java SE Development Kits - 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+- [Git](https://git-scm.com/downloads)
 
 ##### Windows
 
 ```shell
-git clone https://git.4benj.com/Grasscutter-Backrooms/Grasscutter.git
+git clone https://github.com/Grasscutters/Grasscutter.git
 cd Grasscutter
-.\gradlew.bat # 设置环境
-.\gradlew jar # 编译Jar文件
+.\gradlew.bat # 建立开发环境
+.\gradlew jar # 编译
 ```
 
 ##### Linux
 
 ```bash
-git clone https://git.4benj.com/Grasscutter-Backrooms/Grasscutter.git
+git clone https://github.com/Grasscutters/Grasscutter.git
 cd Grasscutter
 chmod +x gradlew
-./gradlew jar # 编译Jar文件
+./gradlew jar # 编译
 ```
 
-你将在项目根目录中找到编译完成的 `grasscutter.jar`。
+编译后的 JAR 文件存放在根目录
 
-# 命令列表
-
-### 命令已被移动至 [维基](https://github.com/Grasscutters/Grasscutter/wiki/Commands)!
+### 命令列表请到 [wiki](https://github.com/Grasscutters/Grasscutter/wiki/Commands) 查看
 
 # 快速排除问题
 
-* 如果编译未能成功,请检查您的jdk安装 (JDK 17并确认jdk处于环境变量`PATH`中
-* 我的客户端无法登录/连接, 4206, 其它... - 大部分情况下这是因为您的代理存在问题.如果使用Fiddler请确认Fiddler监听端口不是`8888`
-* 启动顺序: MongoDB > Grasscutter > 代理程序 (mitmdump, fiddler等.) > 客户端
+* 如果编译失败, 请检查 JDK 安装是否正确 (要求 JDK 17 并确认 JDK 处于环境变量 `PATH` 中)
+* 客户端无法登录/连接, 4206, 其他问题... - 大部分情况是因为代理设置本身就是*问题*。
+  如果使用 Fiddler 请确认 Fiddler 监听端口不是 `8888`
+* 启动顺序: MongoDB > Grasscutter > 代理程序 (mitmdump, fiddler 等) > 客户端
