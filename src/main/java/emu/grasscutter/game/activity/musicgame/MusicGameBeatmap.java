@@ -63,8 +63,6 @@ public class MusicGameBeatmap {
     public MusicBriefInfoOuterClass.MusicBriefInfo.Builder toBriefProto(){
         var player = DatabaseHelper.getPlayerByUid(authorUid);
 
-        return MusicBriefInfoOuterClass.MusicBriefInfo.newBuilder();
-        /* TODO: someone fix the proto
         return MusicBriefInfoOuterClass.MusicBriefInfo.newBuilder()
             .setMusicId(musicId)
             .setMusicNoteCount(musicNoteCount)
@@ -73,7 +71,7 @@ public class MusicGameBeatmap {
             .setShareTime(createTime)
             .setAuthorNickname(player.getNickname())
             .setVersion(1)
-            ;*/
+            ;
     }
 
     private MusicBeatmapListOuterClass.MusicBeatmapList musicBeatmapListToProto(List<BeatmapNote> beatmapNoteList){
