@@ -143,8 +143,9 @@ public final class RegionHandler implements Router {
 
         if( versionName.contains("2.7.5") || versionName.contains("2.8.")) {
             try {
+                String key_id = request.query("key_id");
                 Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-                cipher.init(Cipher.ENCRYPT_MODE, versionName.contains("OSCB") ? Crypto.CUR_OSCB_ENCRYPT_KEY : Crypto.CUR_OSCN_ENCRYPT_KEY);
+                cipher.init(Cipher.ENCRYPT_MODE, key_id.equals("3") ? Crypto.CUR_OS_ENCRYPT_KEY : Crypto.CUR_CN_ENCRYPT_KEY);
 
                 QueryCurrentRegionEvent event = new QueryCurrentRegionEvent(regionData); event.call();
                 var regionInfo = Utils.base64Decode(event.getRegionInfo());
