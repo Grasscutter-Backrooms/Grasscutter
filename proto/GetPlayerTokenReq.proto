@@ -29,4 +29,7 @@ message GetPlayerTokenReq {
 	string psn_id = 5;
 	string client_ip_str = 6;
 	string birthday = 966;
+	uint32 unk1 = 1883;
+	string client_seed = 924;
+	uint32 key_id = 550;
 }

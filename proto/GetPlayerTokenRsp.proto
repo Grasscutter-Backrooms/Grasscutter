@@ -37,4 +37,10 @@ message GetPlayerTokenRsp {
 	uint32 reg_platform = 633;
 	string client_ip_str = 1238;
 	string birthday = 1109;
+	uint32 unk1 = 1728;
+	bool unk2 = 1679;
+	repeated uint32 unk3 = 2012;
+	string encrypted_seed = 1596;
+	string seed_signature = 1501;
+	uint32 unk6 = 1447;
 }

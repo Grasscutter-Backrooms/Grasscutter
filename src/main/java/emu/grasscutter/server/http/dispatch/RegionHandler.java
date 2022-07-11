@@ -19,13 +19,16 @@ import express.http.Response;
 import io.javalin.Javalin;
 
 import javax.crypto.Cipher;
-import java.io.StringReader;
-import java.nio.charset.Charset;
-import java.security.*;
+import java.io.ByteArrayOutputStream;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.security.Signature;
+
 
 import static emu.grasscutter.Configuration.*;
 import static emu.grasscutter.net.proto.QueryRegionListHttpRspOuterClass.QueryRegionListHttpRsp;
@@ -82,8 +85,7 @@ public final class RegionHandler implements Router {
             // Create a region info object.
             var regionInfo = RegionInfo.newBuilder()
                     .setGateserverIp(region.Ip).setGateserverPort(region.Port)
-                    //.setSecretKey(ByteString.copyFrom(Crypto.DISPATCH_SEED))
-                    .setSecretKey(ByteString.copyFrom(new byte[]{0}))
+                    .setSecretKey(ByteString.copyFrom(Crypto.DISPATCH_SEED))
                     .build();
             // Create an updated region query.
             var updatedQuery = QueryCurrRegionHttpRsp.newBuilder().setRegionInfo(regionInfo).build();
@@ -92,7 +94,7 @@ public final class RegionHandler implements Router {
 
         // Create a config object.
         byte[] customConfig = "{\"sdkenv\":\"2\",\"checkdevice\":\"false\",\"loadPatch\":\"false\",\"showexception\":\"false\",\"regionConfig\":\"pm|fk|add\",\"downloadMode\":\"0\"}".getBytes();
-        Crypto.xor(customConfig, Crypto.DISPATCH_KEY, false); // XOR the config with the key.
+        Crypto.xor(customConfig, Crypto.DISPATCH_KEY); // XOR the config with the key.
 
         // Create an updated region list.
         QueryRegionListHttpRsp updatedRegionList = QueryRegionListHttpRsp.newBuilder()
@@ -141,28 +143,39 @@ public final class RegionHandler implements Router {
 
         if( versionName.contains("2.7.5") || versionName.contains("2.8.")) {
             try {
-                var key = FileUtils.readResource("/keys/" + (versionName.contains("OSCB") ? "OSCB_Pub.der" : "OSCN_Pub.der") );
-
-                KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                X509EncodedKeySpec  keySpec = new X509EncodedKeySpec(key);
-                PublicKey pub_key = keyFactory.generatePublic(keySpec);
-
                 Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-                cipher.init(Cipher.ENCRYPT_MODE, pub_key);
+                cipher.init(Cipher.ENCRYPT_MODE, versionName.contains("OSCB") ? Crypto.CUR_OSCB_ENCRYPT_KEY : Crypto.CUR_OSCN_ENCRYPT_KEY);
 
                 QueryCurrentRegionEvent event = new QueryCurrentRegionEvent(regionData); event.call();
-                var regionInfo = event.getRegionInfo();
+                var regionInfo = Utils.base64Decode(event.getRegionInfo());
 
-                String encodedRsp = Utils.base64Encode(cipher.doFinal(Utils.base64Decode(regionInfo)));
+                //Encrypt regionInfo in chunks
+                ByteArrayOutputStream encryptedRegionInfoStream = new ByteArrayOutputStream();
+
+                //Thank you so much GH Copilot
+                int chunkSize = 256 - 11;
+                int regionInfoLength = regionInfo.length;
+                int numChunks = (int) Math.ceil(regionInfoLength / (double) chunkSize);
+
+                for (int i = 0; i < numChunks; i++) {
+                    byte[] chunk = Arrays.copyOfRange(regionInfo, i * chunkSize, Math.min((i + 1) * chunkSize, regionInfoLength));
+                    byte[] encryptedChunk = cipher.doFinal(chunk);
+                    encryptedRegionInfoStream.write(encryptedChunk);
+                }
+
+                Signature privateSignature = Signature.getInstance("SHA256withRSA");
+                privateSignature.initSign(Crypto.CUR_SIGNING_KEY);
+                privateSignature.update(regionInfo);
+
                 var rsp = new QueryCurRegionRspJson();
 
-                rsp.content = encodedRsp;
-                rsp.sign = "ZnVja195b3VfbWh5";
+                rsp.content = Utils.base64Encode(encryptedRegionInfoStream.toByteArray());
+                rsp.sign = Utils.base64Encode(privateSignature.sign());
 
                 response.send(rsp);
             }
-            catch(Exception e) {
-                e.printStackTrace();
+            catch (Exception e) {
+                Grasscutter.getLogger().error("An error occurred while handling query_cur_region.", e);
             }
         }
         else {

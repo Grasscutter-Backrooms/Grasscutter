@@ -14,6 +14,13 @@ import emu.grasscutter.server.event.game.PlayerCreationEvent;
 import emu.grasscutter.server.game.GameSession;
 import emu.grasscutter.server.game.GameSession.SessionState;
 import emu.grasscutter.server.packet.send.PacketGetPlayerTokenRsp;
+import emu.grasscutter.utils.Crypto;
+import emu.grasscutter.utils.Utils;
+
+import javax.crypto.Cipher;
+
+import java.nio.ByteBuffer;
+import java.security.Signature;
 
 @Opcodes(PacketOpcodes.GetPlayerTokenReq)
 public class HandlerGetPlayerTokenReq extends PacketHandler {
@@ -90,8 +97,32 @@ public class HandlerGetPlayerTokenReq extends PacketHandler {
 		session.setUseSecretKey(true);
 		session.setState(SessionState.WAITING_FOR_LOGIN);
 
-		// Send packet
-		session.send(new PacketGetPlayerTokenRsp(session));
-	}
+        // Only >= 2.7.50 has this
+        if (req.getKeyId() > 0) {
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher.init(Cipher.DECRYPT_MODE, Crypto.CUR_SIGNING_KEY);
 
+            var client_seed_encrypted = Utils.base64Decode(req.getClientSeed());
+            var client_seed = ByteBuffer.wrap(cipher.doFinal(client_seed_encrypted))
+                .getLong();
+
+            byte[] seed_bytes = ByteBuffer.wrap(new byte[8])
+                .putLong(Crypto.ENCRYPT_SEED ^ client_seed)
+                .array();
+
+            //Kind of a hack, but whatever
+            cipher.init(Cipher.ENCRYPT_MODE, req.getKeyId() == 3 ? Crypto.CUR_OSCB_ENCRYPT_KEY : Crypto.CUR_OSCN_ENCRYPT_KEY);
+            var seed_encrypted = cipher.doFinal(seed_bytes);
+
+            Signature privateSignature = Signature.getInstance("SHA256withRSA");
+            privateSignature.initSign(Crypto.CUR_SIGNING_KEY);
+            privateSignature.update(seed_bytes);
+
+            session.send(new PacketGetPlayerTokenRsp(session, Utils.base64Encode(seed_encrypted), Utils.base64Encode(privateSignature.sign())));
+        }
+        else {
+            // Send packet
+            session.send(new PacketGetPlayerTokenRsp(session));
+        }
+    }
 }
