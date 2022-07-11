@@ -30,6 +30,7 @@ public class MusicGameActivityHandler extends ActivityHandler {
                 musicGamePlayerData.getMusicGameRecord().values().stream()
                     .collect(Collectors.toMap(MusicGamePlayerData.MusicGameRecord::getMusicId, MusicGamePlayerData.MusicGameRecord::toProto)))
 
+            /* TODO: someone fix the proto
             .addAllPersonCustomBeatmap(musicGamePlayerData.getPersonalCustomBeatmapRecord().values().stream()
                 .map(MusicGamePlayerData.CustomBeatmapRecord::toPersonalBriefProto)
                 .map(MusicBriefInfoOuterClass.MusicBriefInfo.Builder::build)
@@ -38,7 +39,7 @@ public class MusicGameActivityHandler extends ActivityHandler {
             .addAllPersonCustomBeatmap(musicGamePlayerData.getOthersCustomBeatmapRecord().values().stream()
                 .map(MusicGamePlayerData.CustomBeatmapRecord::toOthersBriefProto)
                 .map(MusicBriefInfoOuterClass.MusicBriefInfo.Builder::build)
-                .toList())
+                .toList())*/
             .build());
     }
 

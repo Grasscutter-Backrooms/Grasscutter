@@ -64,6 +64,8 @@ public class MusicGamePlayerData {
         public MusicBriefInfoOuterClass.MusicBriefInfo.Builder toPersonalBriefProto(){
             var musicGameBeatmap = MusicGameBeatmap.getByShareId(musicShareId);
 
+            return MusicBriefInfoOuterClass.MusicBriefInfo.newBuilder();
+            /* TODO: someone fix the proto
             return MusicBriefInfoOuterClass.MusicBriefInfo.newBuilder()
                 .setCanShare(true)
                 .setCreateTime(musicGameBeatmap.getCreateTime())
@@ -72,16 +74,16 @@ public class MusicGamePlayerData {
                 .setPosition(musicGameBeatmap.getSavePosition())
                 .setMusicNoteCount(musicGameBeatmap.getMusicNoteCount())
                 .setMusicShareId(musicShareId)
-                ;
+                ;*/
         }
 
         public MusicBriefInfoOuterClass.MusicBriefInfo.Builder toOthersBriefProto(){
             var musicGameBeatmap = MusicGameBeatmap.getByShareId(musicShareId);
 
-            return musicGameBeatmap.toBriefProto()
-                .setScore(score)
+            return musicGameBeatmap.toBriefProto();
+                /*.setScore(score)
                 .setSettle(settle)
-                ;
+                ;*/
         }
 
     }
