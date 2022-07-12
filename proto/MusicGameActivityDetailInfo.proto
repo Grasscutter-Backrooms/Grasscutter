@@ -22,7 +22,7 @@ import "MusicGameRecord.proto";
 option java_package = "emu.grasscutter.net.proto";
 
 message MusicGameActivityDetailInfo {
-	repeated MusicBriefInfo Unk2700_HMNHCPMFDCP = 4;
-	repeated MusicBriefInfo Unk2700_FOFAFGKAEJM = 7;
+	repeated MusicBriefInfo others_custom_beatmap = 4;
+	repeated MusicBriefInfo person_custom_beatmap = 7;
 	map<uint32, MusicGameRecord> music_game_record_map = 8;
 }
