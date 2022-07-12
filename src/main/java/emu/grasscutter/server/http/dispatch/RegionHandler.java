@@ -147,12 +147,13 @@ public final class RegionHandler implements Router {
 
                 if (GAME_OPTIONS.uaPatchCompatible) {
                     // More love for UA Patch players
-                    response.json(Map.of(
-                        "content",
-                        event.getRegionInfo(),
-                        "sign",
-                        "TW9yZSBsb3ZlIGZvciBVQSBQYXRjaCBwbGF5ZXJz"
-                    ));
+
+                    var rsp = new QueryCurRegionRspJson();
+
+                    rsp.content = event.getRegionInfo();
+                    rsp.sign = "TW9yZSBsb3ZlIGZvciBVQSBQYXRjaCBwbGF5ZXJz";
+
+                    response.send(rsp);
                     return;
                 }
 
