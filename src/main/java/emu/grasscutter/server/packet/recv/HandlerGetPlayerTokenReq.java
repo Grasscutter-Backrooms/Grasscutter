@@ -110,9 +110,7 @@ public class HandlerGetPlayerTokenReq extends PacketHandler {
 
                 String base64str = Utils.base64Encode(clientBytes);
 
-                int keyId = req.getKeyId();
-
-                session.send(new PacketGetPlayerTokenRsp(session, keyId, base64str));
+                session.send(new PacketGetPlayerTokenRsp(session, base64str, "bm90aGluZyBoZXJl"));
                 return;
             }
 
