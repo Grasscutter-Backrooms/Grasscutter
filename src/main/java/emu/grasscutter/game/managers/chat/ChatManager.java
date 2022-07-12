@@ -204,15 +204,13 @@ public class ChatManager implements ChatManagerHandler {
 	 ********************/
 	public void sendServerWelcomeMessages(Player player) {
 		var joinOptions = GAME_INFO.joinOptions;
-		
+
 		if (joinOptions.welcomeEmotes != null && joinOptions.welcomeEmotes.length > 0) {
 			this.sendPrivateMessageFromServer(player.getUid(), joinOptions.welcomeEmotes[Utils.randomRange(0, joinOptions.welcomeEmotes.length - 1)]);
 		}
-		
+
 		if (joinOptions.welcomeMessage != null && joinOptions.welcomeMessage.length() > 0) {
 			this.sendPrivateMessageFromServer(player.getUid(), joinOptions.welcomeMessage);
 		}
-
-		this.sendPrivateMessageFromServer(player.getUid(), "THIS IS AN EXPERIMENTAL BUILD OF GRASSCUTTER FOR 2.7.50/2.8\nDON'T LEAK <3");
 	}
 }
