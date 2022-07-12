@@ -143,11 +143,22 @@ public final class RegionHandler implements Router {
 
         if( versionName.contains("2.7.5") || versionName.contains("2.8.")) {
             try {
+                QueryCurrentRegionEvent event = new QueryCurrentRegionEvent(regionData); event.call();
+
+                if (GAME_OPTIONS.uaPatchCompatible) {
+                    // More love for UA Patch players
+                    response.json(Map.of(
+                        "content",
+                        event.getRegionInfo(),
+                        "sign",
+                        "TW9yZSBsb3ZlIGZvciBVQSBQYXRjaCBwbGF5ZXJz"
+                    ));
+                    return;
+                }
+
                 String key_id = request.query("key_id");
                 Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
                 cipher.init(Cipher.ENCRYPT_MODE, key_id.equals("3") ? Crypto.CUR_OS_ENCRYPT_KEY : Crypto.CUR_CN_ENCRYPT_KEY);
-
-                QueryCurrentRegionEvent event = new QueryCurrentRegionEvent(regionData); event.call();
                 var regionInfo = Utils.base64Decode(event.getRegionInfo());
 
                 //Encrypt regionInfo in chunks

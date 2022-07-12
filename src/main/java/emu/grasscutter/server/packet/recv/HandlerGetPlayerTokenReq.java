@@ -1,6 +1,7 @@
 package emu.grasscutter.server.packet.recv;
 
 import static emu.grasscutter.Configuration.ACCOUNT;
+import static emu.grasscutter.Configuration.GAME_OPTIONS;
 
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.database.DatabaseHelper;
@@ -14,6 +15,7 @@ import emu.grasscutter.server.event.game.PlayerCreationEvent;
 import emu.grasscutter.server.game.GameSession;
 import emu.grasscutter.server.game.GameSession.SessionState;
 import emu.grasscutter.server.packet.send.PacketGetPlayerTokenRsp;
+import emu.grasscutter.utils.ByteHelper;
 import emu.grasscutter.utils.Crypto;
 import emu.grasscutter.utils.Utils;
 
@@ -99,6 +101,21 @@ public class HandlerGetPlayerTokenReq extends PacketHandler {
 
         // Only >= 2.7.50 has this
         if (req.getKeyId() > 0) {
+            if (GAME_OPTIONS.uaPatchCompatible) {
+                // More love for ua patch plz 😭
+
+                byte[] clientBytes = Utils.base64Decode(req.getClientSeed());
+                byte[] seed = ByteHelper.longToBytes(Crypto.ENCRYPT_SEED);
+                Crypto.xor(clientBytes, seed);
+
+                String base64str = Utils.base64Encode(clientBytes);
+
+                int keyId = req.getKeyId();
+
+                session.send(new PacketGetPlayerTokenRsp(session, keyId, base64str));
+                return;
+            }
+
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             cipher.init(Cipher.DECRYPT_MODE, Crypto.CUR_SIGNING_KEY);
 
