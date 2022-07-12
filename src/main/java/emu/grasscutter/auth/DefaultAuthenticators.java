@@ -105,19 +105,24 @@ public final class DefaultAuthenticators {
             String decryptedPassword = "";
 
             // Get Password
-            try {
-                byte[] key = FileUtils.readResource("/keys/auth_private-key.der");
-                PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(key);
-                KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                RSAPrivateKey private_key = (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
+            if (GAME_OPTIONS.uaPatchCompatible) {
+                // Make sure your patch can send passwords in plain text
+                decryptedPassword = request.getPasswordRequest().password;
+            } else {
+                try {
+                    byte[] key = FileUtils.readResource("/keys/auth_private-key.der");
+                    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(key);
+                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+                    RSAPrivateKey private_key = (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
 
-                Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+                    Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 
-                cipher.init(Cipher.DECRYPT_MODE, private_key);
+                    cipher.init(Cipher.DECRYPT_MODE, private_key);
 
-                decryptedPassword = new String(cipher.doFinal(Utils.base64Decode(request.getPasswordRequest().password)), StandardCharsets.UTF_8);
-            } catch (Exception ignored) {
-                ignored.printStackTrace();
+                    decryptedPassword = new String(cipher.doFinal(Utils.base64Decode(request.getPasswordRequest().password)), StandardCharsets.UTF_8);
+                } catch (Exception ignored) {
+                    ignored.printStackTrace();
+                }
             }
 
             if (decryptedPassword == null) {
