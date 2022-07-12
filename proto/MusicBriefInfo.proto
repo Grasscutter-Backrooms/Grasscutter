@@ -31,12 +31,12 @@ message MusicBriefInfo {
     bool settle = 1;
     uint32 version = 15;
     bool can_share = 8;
-    bool BDMDJNDJNHE = 11;
-    bool KLCFHEFBIOC = 9;
-    uint64 CIKHLPGIDLL = 5;
-    uint32 OBBHEMGIJMO = 1182;
-    repeated uint32 MHKDJCEHPEL = 982;
-    repeated uint32 MDFHAODJLKE = 1002;
-    uint32 LODOEEGDDNI = 576;
-    uint32 DHGEECHIPBK = 1822;
+    bool Unk2700_DNLEGADDHKM = 11;
+    bool Unk2700_GBCGGDONMCD = 9;
+    uint64 Unk2700_JNENCBCGPGO = 5;
+    uint32 Unk2700_MKBNLEKMIMD = 1182;
+    repeated uint32 Unk2700_JAEONBMBFJJ = 982;
+    repeated uint32 Unk2700_GDCGOMNBMEO = 1002;
+    uint32 Unk2700_KAMOCHAKPGP = 576;
+    uint32 Unk2700_LPEKFJBNEJM = 1822;
 }
